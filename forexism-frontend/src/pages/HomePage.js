@@ -1,87 +1,244 @@
-import React, { useState, useEffect } from 'react';
-import { Star, CheckCircle, Video, BarChart3, Zap, ChevronDown, ChevronUp, Award, Shield, FileText, Download, ExternalLink, X, ArrowLeft, Play, Users, Target, Brain, TrendingUp } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Star, CheckCircle, Video, BarChart3, Zap, ChevronDown, ChevronUp, Award, Shield, FileText, Download, ExternalLink, X, ArrowLeft, Play, Users, Target, Brain, TrendingUp, Rocket, Clock, BookOpen, Mail, Phone, Sparkles, Trophy, Heart, TrendingUp as TrendingUpIcon, Gem, Crown, Coins, Wallet, Globe, Smartphone, Calendar } from 'lucide-react';
 
 const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMode }) => {
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [openFAQ, setOpenFAQ] = useState(null);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const [selectedCertificate, setSelectedCertificate] = useState(null);
+  const [animatedText, setAnimatedText] = useState('');
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [showCursor, setShowCursor] = useState(true);
+  const [isVisible, setIsVisible] = useState({});
+  const [isTyping, setIsTyping] = useState(true);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [videoHover, setVideoHover] = useState(false);
+
+  const lines = [
+    "Master the Art of Trading,",
+    "Unlock Your Trading Potential",
+    "with Expert Guidance!"
+  ];
+
+  // Enhanced text animation with perfect timing
+  useEffect(() => {
+    setIsTyping(true);
+    setAnimatedText('');
+    let currentText = '';
+    let currentIndex = 0;
+    const currentLine = lines[currentLineIndex];
+    
+    const typeWriter = () => {
+      if (currentIndex < currentLine.length) {
+        currentText += currentLine.charAt(currentIndex);
+        setAnimatedText(currentText);
+        currentIndex++;
+        setTimeout(typeWriter, 80);
+      } else {
+        setIsTyping(false);
+        setTimeout(() => {
+          setCurrentLineIndex((prev) => (prev + 1) % lines.length);
+        }, 2000);
+      }
+    };
+
+    const timer = setTimeout(typeWriter, 500);
+    return () => clearTimeout(timer);
+  }, [currentLineIndex]);
+
+  // Cursor blink effect
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 500);
+    return () => clearInterval(cursorInterval);
+  }, []);
+
+  // Mouse move effect for parallax
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Scroll progress and animations
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      setScrollProgress(progress);
+
+      // Section animations
+      const sections = document.querySelectorAll('.animate-on-scroll');
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight * 0.8;
+        if (isVisible) {
+          setIsVisible(prev => ({ ...prev, [section.id]: true }));
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Particle effect for hero section
+  useEffect(() => {
+    const createParticle = () => {
+      const particle = document.createElement('div');
+      particle.className = 'absolute w-1 h-1 bg-[#0076FF] rounded-full animate-float-particle';
+      particle.style.left = Math.random() * 100 + 'vw';
+      particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+      particle.style.animationDelay = Math.random() * 5 + 's';
+      particle.style.opacity = Math.random() * 0.6 + 0.2;
+      document.getElementById('particle-container')?.appendChild(particle);
+
+      setTimeout(() => {
+        particle.remove();
+      }, 15000);
+    };
+
+    const interval = setInterval(createParticle, 300);
+    return () => clearInterval(interval);
+  }, []);
 
   const pakistaniReviews = [
     {
-      name: "Ahmed Khan",
-      location: "Karachi, Pakistan",
-      initial: "AK",
-      color: "from-blue-600 to-blue-500",
+      name: "Ahmed Raza",
+      location: "Karachi",
+      initial: "AR",
+      color: "from-blue-500 to-cyan-500",
       rating: 5,
-      review: "Outstanding course! The Structure-Based Trading strategy changed my trading completely. Mai ab consistently profit kar raha hun. Highly recommended for all Pakistani traders!"
+      review: "Forexism transformed my life! From struggling to consistent profits. Atif Bhai's guidance is priceless for Pakistani traders.",
+      profit: "+$12,500",
+      profession: "Former Bank Employee"
     },
     {
-      name: "Fatima Noor",
-      location: "Lahore, Pakistan",
-      initial: "FN",
-      color: "from-purple-600 to-purple-500",
-      rating: 4.9,
-      review: "Best trading course in Pakistan! Simple Urdu me samjhaya gaya hai. Risk management techniques bohat helpful hain. The structured approach makes everything crystal clear!"
-    },
-    {
-      name: "Muhammad Bilal",
-      location: "Islamabad, Pakistan",
-      initial: "MB",
-      color: "from-green-600 to-green-500",
+      name: "Sara Khan",
+      location: "Lahore",
+      initial: "SK",
+      color: "from-purple-500 to-pink-500",
       rating: 5,
-      review: "Excellent platform for learning. Live trading sessions se real market ki samajh ayi. Mentor support bhi amazing hai. The methodology is game-changing!"
+      review: "As a housewife, I never thought I could trade. Now I'm earning from home! Shukriya Forexism team!",
+      profit: "+$8,200",
+      profession: "Housewife"
     },
     {
-      name: "Ayesha Malik",
-      location: "Faisalabad, Pakistan",
-      initial: "AM",
-      color: "from-pink-600 to-pink-500",
-      rating: 4.8,
-      review: "As a beginner, is course ne mujhe confident trader bana diya. Chart reading aur technical analysis ab clear hai. Structure-based approach is perfect for beginners!"
-    },
-    {
-      name: "Hassan Raza",
-      location: "Multan, Pakistan",
-      initial: "HR",
-      color: "from-orange-600 to-orange-500",
+      name: "Bilal Ahmed",
+      location: "Islamabad",
+      initial: "BA",
+      color: "from-green-500 to-emerald-500",
       rating: 5,
-      review: "Professional trading seekhne ka best platform! The structured methodology is incredibly powerful. Support team hamesha available rehti hai. Truly life-changing!"
+      review: "Passed FTMO challenge in first attempt! The structure-based method really works. JazakAllah!",
+      profit: "+$25,000",
+      profession: "Software Engineer"
     },
     {
-      name: "Zainab Ahmed",
-      location: "Peshawar, Pakistan",
-      initial: "ZA",
-      color: "from-teal-600 to-teal-500",
-      rating: 4.9,
-      review: "Zabardast course hai! PropFirm challenges pass karne me is course ne bohat help ki. Ab mai funded trader hun. The structured approach works perfectly!"
+      name: "Usman Ali",
+      location: "Rawalpindi",
+      initial: "UA",
+      color: "from-orange-500 to-red-500",
+      rating: 5,
+      review: "Left my 9-5 job after 6 months of learning. Now earning 3x more with time freedom!",
+      profit: "+$15,000",
+      profession: "Ex-Marketing Manager"
     }
   ];
 
-  const faqs = [
+  const features = [
     {
-      question: "What is different in this course than courses of other mentors?",
-      answer: "Our course offers a unique Structure-Based Trading methodology combined with live trading sessions and lifetime support. Unlike other courses, we provide practical, real-time market examples with hands-on practice. You'll learn from experienced traders who have been in the market for years, focusing on both technical and fundamental analysis. Plus, you get access to our exclusive community and PropFirm guidance to help you become a funded trader."
+      icon: BarChart3,
+      title: "Smart Money Concepts",
+      description: "Learn institutional trading strategies that banks use",
+      color: "from-blue-500 to-cyan-500",
+      delay: "0ms"
     },
     {
-      question: "My English is not very good, can I learn trading?",
-      answer: "Absolutely! Our course is designed to be beginner-friendly and easy to understand. We explain concepts in simple language with visual examples and charts. Many of our successful students started with basic English. The important thing is understanding the market concepts, which we teach through practical demonstrations and real trading examples. You can also ask questions in our community support, and our team is always ready to help clarify any doubts."
+      icon: Target,
+      title: "High Accuracy Setups",
+      description: "85%+ win rate strategies with clear entry/exit rules",
+      color: "from-purple-500 to-pink-500",
+      delay: "100ms"
     },
     {
-      question: "Which broker is best for trading?",
-      answer: "We recommend regulated brokers with low spreads and reliable execution. Popular choices include IC Markets, XM, and Exness for international traders. For Pakistani traders, we also guide you on how to choose brokers that accept local payment methods. The best broker depends on your trading style, capital, and preferences. We provide detailed broker comparison and guidance in our course to help you make the right choice based on your needs."
+      icon: Brain,
+      title: "Trading Psychology",
+      description: "Master your mindset for consistent profitability",
+      color: "from-green-500 to-emerald-500",
+      delay: "200ms"
     },
     {
-      question: "Is crypto trading better or forex trading?",
-      answer: "Both have their advantages! Forex markets are more stable and liquid with 24/5 trading, making them ideal for beginners. Crypto offers higher volatility and 24/7 trading but comes with more risk. Our course teaches you strategies that work in both markets - stocks, forex, and crypto. We recommend starting with forex to learn the fundamentals, then expanding to crypto once you're confident. The methodology we teach applies to all financial markets."
+      icon: Shield,
+      title: "Risk Management",
+      description: "Protect your capital while maximizing returns",
+      color: "from-orange-500 to-red-500",
+      delay: "300ms"
     },
     {
-      question: "Is this course one time education only?",
-      answer: "No! This is lifetime access education. Once you enroll, you get permanent access to all course materials, including future updates and new content. You'll also have lifetime access to our community support, live trading sessions, and market analysis. We continuously update our course with new strategies and market insights. Plus, you can revisit lessons anytime you want to refresh your knowledge or learn advanced concepts as you grow as a trader."
+      icon: Zap,
+      title: "Live Trading",
+      description: "Real-time market analysis and trade executions",
+      color: "from-yellow-500 to-amber-500",
+      delay: "400ms"
+    },
+    {
+      icon: Users,
+      title: "Community Support",
+      description: "24/7 access to mentors and successful traders",
+      color: "from-indigo-500 to-blue-500",
+      delay: "500ms"
     }
   ];
 
-  // Professional Certificate Names
+  const stats = [
+    { number: "2,847", label: "Successful Traders", icon: Users, suffix: "+", color: "from-blue-500 to-cyan-500" },
+    { number: "4.9", label: "Student Rating", icon: Star, suffix: "/5", color: "from-yellow-500 to-amber-500" },
+    { number: "94", label: "Success Rate", icon: TrendingUp, suffix: "%", color: "from-green-500 to-emerald-500" },
+    { number: "15", label: "Hours Content", icon: Clock, suffix: "+", color: "from-purple-500 to-pink-500" }
+  ];
+
+  const transformationStories = [
+    {
+      before: "Struggling 9-5 Job",
+      after: "Financial Freedom",
+      income: "$3,500/month",
+      duration: "6 Months",
+      image: "/stories/1.jpg"
+    },
+    {
+      before: "College Student",
+      after: "Full-Time Trader",
+      income: "$2,800/month",
+      duration: "4 Months",
+      image: "/stories/2.jpg"
+    },
+    {
+      before: "Housewife",
+      after: "Home Trader",
+      income: "$1,900/month",
+      duration: "5 Months",
+      image: "/stories/3.jpg"
+    },
+    {
+      before: "Freelancer",
+      after: "Prop Firm Trader",
+      income: "$5,200/month",
+      duration: "8 Months",
+      image: "/stories/4.jpg"
+    }
+  ];
+
+  // Complete certificates array with all 16 certificates
   const allCertificates = [
     {
       id: 1,
@@ -197,15 +354,35 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
     }
   ];
 
-  // Show first 6 certificates, then all when expanded
-  const displayedCertificates = showAllCertificates 
-    ? allCertificates 
-    : allCertificates.slice(0, 6);
+  const faqs = [
+    {
+      question: "What is different in this course than courses of other mentors?",
+      answer: "Our course offers a unique Structure-Based Trading methodology combined with live trading sessions and lifetime support. Unlike other courses, we provide practical, real-time market examples with hands-on practice. You'll learn from experienced traders who have been in the market for years, focusing on both technical and fundamental analysis. Plus, you get access to our exclusive community and PropFirm guidance to help you become a funded trader."
+    },
+    {
+      question: "My English is not very good, can I learn trading?",
+      answer: "Absolutely! Our course is designed to be beginner-friendly and easy to understand. We explain concepts in simple language with visual examples and charts. Many of our successful students started with basic English. The important thing is understanding the market concepts, which we teach through practical demonstrations and real trading examples. You can also ask questions in our community support, and our team is always ready to help clarify any doubts."
+    },
+    {
+      question: "Which broker is best for trading?",
+      answer: "We recommend regulated brokers with low spreads and reliable execution. Popular choices include IC Markets, XM, and Exness for international traders. For Pakistani traders, we also guide you on how to choose brokers that accept local payment methods. The best broker depends on your trading style, capital, and preferences. We provide detailed broker comparison and guidance in our course to help you make the right choice based on your needs."
+    },
+    {
+      question: "Is crypto trading better or forex trading?",
+      answer: "Both have their advantages! Forex markets are more stable and liquid with 24/5 trading, making them ideal for beginners. Crypto offers higher volatility and 24/7 trading but comes with more risk. Our course teaches you strategies that work in both markets - stocks, forex, and crypto. We recommend starting with forex to learn the fundamentals, then expanding to crypto once you're confident. The methodology we teach applies to all financial markets."
+    },
+    {
+      question: "Is this course one time education only?",
+      answer: "No! This is lifetime access education. Once you enroll, you get permanent access to all course materials, including future updates and new content. You'll also have lifetime access to our community support, live trading sessions, and market analysis. We continuously update our course with new strategies and market insights. Plus, you can revisit lessons anytime you want to refresh your knowledge or learn advanced concepts as you grow as a trader."
+    }
+  ];
+
+  const displayedCertificates = showAllCertificates ? allCertificates : allCertificates.slice(0, 6);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentReviewIndex((prev) => (prev + 1) % pakistaniReviews.length);
-    }, 5000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -232,8 +409,829 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
     setSelectedCertificate(null);
   };
 
+  // Function to handle free masterclass click
+  const handleFreeMasterclassClick = () => {
+    setCurrentPage('courses');
+    // This will trigger the free courses view in CoursesPage
+    setTimeout(() => {
+      const event = new CustomEvent('navigateToFreeCourses');
+      window.dispatchEvent(event);
+    }, 100);
+  };
+
   return (
-    <div className="min-h-screen bg-[#0a1628] text-white">
+    <div className="min-h-screen bg-[#0a1628] text-white overflow-x-hidden">
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        @keyframes float-particle {
+          0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 0.5; }
+          100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        @keyframes glow {
+          0%, 100% { 
+            box-shadow: 0 0 20px rgba(0, 118, 255, 0.3),
+                       0 0 40px rgba(0, 118, 255, 0.2),
+                       0 0 60px rgba(0, 118, 255, 0.1);
+          }
+          50% { 
+            box-shadow: 0 0 30px rgba(0, 118, 255, 0.6),
+                       0 0 60px rgba(0, 118, 255, 0.4),
+                       0 0 90px rgba(0, 118, 255, 0.2);
+          }
+        }
+        @keyframes slideIn {
+          from { 
+            transform: translateX(-100px) scale(0.9); 
+            opacity: 0; 
+          }
+          to { 
+            transform: translateX(0) scale(1); 
+            opacity: 1; 
+          }
+        }
+        @keyframes bounceIn {
+          0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+          50% { transform: scale(1.05) rotate(5deg); }
+          70% { transform: scale(0.95); }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 20px rgba(0, 118, 255, 0.4);
+          }
+          50% { 
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 118, 255, 0.8);
+          }
+        }
+        @keyframes shimmer {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
+        }
+        @keyframes star-twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        @keyframes hologram {
+          0% { 
+            background-position: 0% 0%;
+            opacity: 0.7;
+          }
+          50% { 
+            background-position: 100% 100%;
+            opacity: 1;
+          }
+          100% { 
+            background-position: 0% 0%;
+            opacity: 0.7;
+          }
+        }
+        @keyframes matrix {
+          0% { transform: translateY(-100px) rotateX(90deg); opacity: 0; }
+          50% { opacity: 0.8; }
+          100% { transform: translateY(100vh) rotateX(0deg); opacity: 0; }
+        }
+        @keyframes videoGlow {
+          0%, 100% { 
+            box-shadow: 
+              0 0 20px rgba(0, 118, 255, 0.4),
+              0 0 40px rgba(0, 118, 255, 0.2),
+              0 0 60px rgba(0, 118, 255, 0.1),
+              inset 0 0 20px rgba(0, 118, 255, 0.1);
+          }
+          50% { 
+            box-shadow: 
+              0 0 40px rgba(0, 118, 255, 0.8),
+              0 0 80px rgba(0, 118, 255, 0.4),
+              0 0 120px rgba(0, 118, 255, 0.2),
+              inset 0 0 40px rgba(0, 118, 255, 0.2);
+          }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-float-particle { animation: float-particle 15s linear infinite; }
+        .animate-glow { animation: glow 3s ease-in-out infinite; }
+        .animate-slide-in { animation: slideIn 1s ease-out; }
+        .animate-bounce-in { animation: bounceIn 1s ease-out; }
+        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out; }
+        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .animate-star-twinkle { animation: star-twinkle 3s ease-in-out infinite; }
+        .animate-hologram { 
+          animation: hologram 4s ease-in-out infinite;
+          background: linear-gradient(45deg, 
+            rgba(0, 118, 255, 0.1) 0%, 
+            rgba(0, 198, 255, 0.2) 25%, 
+            rgba(0, 118, 255, 0.1) 50%, 
+            rgba(0, 198, 255, 0.2) 75%, 
+            rgba(0, 118, 255, 0.1) 100%);
+          background-size: 400% 400%;
+        }
+        .animate-video-glow { animation: videoGlow 3s ease-in-out infinite; }
+        .shimmer-text {
+          background: linear-gradient(90deg, #0076FF, #00C6FF, #0076FF);
+          background-size: 1000px 100%;
+          animation: shimmer 3s infinite linear;
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        .matrix-rain {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          overflow: hidden;
+        }
+        .matrix-char {
+          position: absolute;
+          color: #00C6FF;
+          font-family: 'Courier New', monospace;
+          font-weight: bold;
+          animation: matrix 3s linear infinite;
+          text-shadow: 0 0 8px #00C6FF;
+        }
+        .parallax-bg {
+          transform: translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px);
+        }
+        .parallax-content {
+          transform: translate(${mousePosition.x * 0.3}px, ${mousePosition.y * 0.3}px);
+        }
+        .video-container {
+          position: relative;
+          background: linear-gradient(145deg, #0a1628 0%, #0f1f3a 50%, #0a1628 100%);
+          border-radius: 24px;
+          overflow: hidden;
+          transform-style: preserve-3d;
+          perspective: 1000px;
+        }
+        .video-frame {
+          position: relative;
+          border: 3px solid;
+          border-image: linear-gradient(45deg, #0076FF, #00C6FF, #0076FF) 1;
+          border-radius: 20px;
+          background: rgba(0, 0, 0, 0.9);
+          transform: ${videoHover ? 'translateZ(20px) rotateX(5deg) rotateY(-5deg)' : 'translateZ(0) rotateX(0) rotateY(0)'};
+          transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .video-glow {
+          position: absolute;
+          top: -10px;
+          left: -10px;
+          right: -10px;
+          bottom: -10px;
+          background: linear-gradient(45deg, #0076FF, #00C6FF, #0076FF);
+          border-radius: 24px;
+          filter: blur(20px);
+          opacity: 0.3;
+          z-index: -1;
+          animation: videoGlow 3s ease-in-out infinite;
+        }
+      `}</style>
+
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-700 z-50">
+        <div 
+          className="h-full bg-gradient-to-r from-[#0076FF] to-[#00C6FF] transition-all duration-300"
+          style={{ width: `${scrollProgress}%` }}
+        ></div>
+      </div>
+
+      {/* Supreme Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628] pt-24">
+        {/* Animated Stars Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(80)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-white rounded-full animate-star-twinkle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${2 + Math.random() * 3}s`
+              }}
+            ></div>
+          ))}
+        </div>
+        
+        {/* Matrix Rain Effect */}
+        <div className="matrix-rain">
+          {[...Array(30)].map((_, i) => (
+            <div
+              key={i}
+              className="matrix-char"
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                animationDuration: `${2 + Math.random() * 2}s`,
+                fontSize: `${14 + Math.random() * 10}px`
+              }}
+            >
+              {Math.random() > 0.5 ? '0' : '1'}
+            </div>
+          ))}
+        </div>
+        
+        {/* Particle Container */}
+        <div id="particle-container" className="absolute inset-0 pointer-events-none"></div>
+        
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div 
+            className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full filter blur-[100px] opacity-20 animate-float parallax-bg"
+            style={{ transform: `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px)` }}
+          ></div>
+          <div 
+            className="absolute bottom-20 right-10 w-72 h-72 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full filter blur-[100px] opacity-20 animate-float parallax-bg"
+            style={{ animationDelay: '2s', transform: `translate(${mousePosition.x * 0.3}px, ${mousePosition.y * 0.3}px)` }}
+          ></div>
+          <div 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full filter blur-[120px] opacity-10 animate-pulse parallax-bg"
+            style={{ transform: `translate(${mousePosition.x * 0.2}px, ${mousePosition.y * 0.2}px)` }}
+          ></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Hero Content */}
+            <div className="space-y-8 animate-slide-in parallax-content">
+              {/* Premium Badge - Fixed positioning with proper margin */}
+              <div className="inline-flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full backdrop-blur-sm border border-[#0076FF]/30 animate-glow mb-8 transform hover:scale-105 transition-transform duration-300">
+                <Trophy className="h-5 w-5 text-yellow-400 animate-pulse" />
+                <span className="text-white font-bold text-sm uppercase tracking-wider">#1 Trading Platform in Pakistan</span>
+              </div>
+
+              {/* Enhanced Animated Main Heading */}
+              <div className="space-y-6">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight">
+                  <span className="block text-white min-h-[84px] flex items-center">
+                    {animatedText}
+                    <span className={`inline-block w-2 h-16 bg-[#0076FF] ml-2 ${showCursor && isTyping ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 animate-pulse`}></span>
+                  </span>
+                  <span className="block shimmer-text mt-4 text-4xl sm:text-5xl">
+                    Start Your Journey Today!
+                  </span>
+                </h1>
+              </div>
+
+              {/* Emotional Subheading */}
+              <p className="text-2xl sm:text-3xl text-blue-100 leading-relaxed font-medium animate-fade-in-up">
+                Join <span className="text-yellow-400 font-bold animate-pulse">2,847+</span> Pakistani Traders Who Found 
+                <span className="text-green-400 font-bold"> Financial Freedom </span>
+                Through Our Proven System!
+              </p>
+
+              {/* Emotional Benefits */}
+              <div className="grid grid-cols-2 gap-6 py-6">
+                {[
+                  { text: "Quit Your 9-5 Job", icon: "💼", color: "from-red-500 to-pink-500" },
+                  { text: "Work From Anywhere", icon: "🌍", color: "from-blue-500 to-cyan-500" },
+                  { text: "Financial Independence", icon: "💰", color: "from-green-500 to-emerald-500" },
+                  { text: "Time Freedom", icon: "⏰", color: "from-purple-500 to-pink-500" }
+                ].map((item, index) => (
+                  <div 
+                    key={index} 
+                    className="flex items-center space-x-3 group transform hover:scale-105 transition-all duration-300"
+                    style={{ animationDelay: `${index * 200}ms` }}
+                  >
+                    <div className={`w-12 h-12 bg-gradient-to-r ${item.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <span className="text-xl">{item.icon}</span>
+                    </div>
+                    <span className="text-white font-bold text-lg">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-6 pt-8">
+                <button
+                  onClick={() => setCurrentPage('courses')}
+                  className="group px-12 py-5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-2xl hover:from-[#0056CC] hover:to-[#0076FF] transition-all duration-500 font-black text-xl shadow-2xl hover:shadow-[#0076FF]/50 hover:scale-105 transform animate-pulse-glow relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <span className="flex items-center space-x-3 relative z-10">
+                    <Rocket className="h-6 w-6 group-hover:animate-bounce" />
+                    <span>START YOUR JOURNEY →</span>
+                  </span>
+                </button>
+                
+                <button
+                  onClick={handleFreeMasterclassClick}
+                  className="px-12 py-5 bg-white/10 text-white rounded-2xl hover:bg-white/20 transition-all duration-500 font-bold text-xl backdrop-blur-sm border-2 border-white/20 hover:border-white/40 group relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0076FF]/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <span className="flex items-center space-x-3 relative z-10">
+                    <Play className="h-6 w-6 group-hover:scale-110 transition-transform" />
+                    <span>Watch Free Masterclass</span>
+                  </span>
+                </button>
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="flex items-center justify-between pt-8">
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex -space-x-3">
+                      {[1,2,3,4].map((i) => (
+                        <div 
+                          key={i} 
+                          className="w-10 h-10 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full border-2 border-[#0a1628] animate-bounce shadow-lg"
+                          style={{animationDelay: `${i * 0.2}s`}}
+                        ></div>
+                      ))}
+                    </div>
+                    <div>
+                      <div className="text-white font-black text-lg">2,847+</div>
+                      <div className="text-blue-300 text-sm">Happy Traders</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex items-center text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-5 w-5 fill-yellow-400 animate-pulse" style={{animationDelay: `${i * 0.1}s`}} />
+                      ))}
+                    </div>
+                    <div className="text-blue-300 text-sm">4.9/5 Rating</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ultra Pro Video Visual */}
+            <div className="relative animate-bounce-in parallax-content">
+              <div 
+                className="video-container"
+                onMouseEnter={() => setVideoHover(true)}
+                onMouseLeave={() => setVideoHover(false)}
+              >
+                <div className="video-glow"></div>
+                <div className="video-frame animate-video-glow">
+                  {/* Holographic Effect Overlay */}
+                  <div className="absolute inset-0 animate-hologram rounded-[17px] pointer-events-none z-10"></div>
+                  
+                  {/* Main Video Content */}
+                  <div className="relative" style={{ paddingBottom: '56.25%' }}>
+                    <iframe
+                      className="absolute top-0 left-0 w-full h-full rounded-[17px]"
+                      src="https://www.youtube.com/embed/cmSAr4o3F30?autoplay=1&mute=1&loop=1&playlist=cmSAr4o3F30&controls=1&rel=0&modestbranding=1"
+                      title="Forexism - Professional Trading Education Platform | Learn Trading from Experts"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                    
+                    {/* Animated Play Button Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/40 rounded-[17px]">
+                      <div className="bg-[#0076FF] p-6 rounded-full animate-pulse-glow transform hover:scale-110 transition-transform">
+                        <Play className="w-12 h-12 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Video Info Bar with Ultra Pro Design */}
+                <div className="relative bg-gradient-to-r from-[#0076FF] to-[#0056CC] px-8 py-6 rounded-b-[20px] overflow-hidden">
+                  {/* Animated Background Pattern */}
+                  <div className="absolute inset-0 opacity-20">
+                    <div className="absolute top-0 left-0 w-20 h-20 bg-white/30 rounded-full filter blur-xl animate-float"></div>
+                    <div className="absolute bottom-0 right-0 w-20 h-20 bg-white/30 rounded-full filter blur-xl animate-float" style={{animationDelay: '1s'}}></div>
+                  </div>
+                  
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center space-x-4 mb-3">
+                        <div className="flex items-center space-x-2 bg-red-600 px-4 py-2 rounded-xl animate-pulse">
+                          <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
+                          <span className="text-white font-bold text-sm">FREE MASTERCLASS</span>
+                        </div>
+                        <span className="text-blue-100 text-lg font-medium">For Pakistani Traders</span>
+                      </div>
+                      <div className="text-white font-black text-xl">
+                        Discover Forexism - Your Path to Trading Success
+                      </div>
+                      <div className="text-blue-100 text-sm mt-1">
+                        Learn professional trading strategies from industry experts
+                      </div>
+                    </div>
+                    <div className="bg-white/20 p-3 rounded-xl group-hover:scale-110 transition-transform backdrop-blur-sm">
+                      <Play className="h-8 w-8 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Success Elements */}
+              <div className="absolute -top-6 -right-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-2xl font-black text-lg transform rotate-12 shadow-2xl animate-float group hover:scale-110 transition-transform cursor-pointer border-2 border-white/20">
+                Success Stories
+              </div>
+              <div className="absolute -bottom-6 -left-6 bg-gradient-to-r from-yellow-500 to-amber-500 text-[#0a1628] px-6 py-3 rounded-2xl font-black text-lg transform -rotate-12 shadow-2xl animate-float group hover:scale-110 transition-transform cursor-pointer border-2 border-white/20" style={{animationDelay: '1s'}}>
+                94% Success Rate
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="text-center">
+            <div className="w-6 h-10 border-4 border-[#0076FF] rounded-full flex justify-center mb-2">
+              <div className="w-2 h-3 bg-[#0076FF] rounded-full mt-2 animate-pulse"></div>
+            </div>
+            <div className="text-[#0076FF] font-bold text-sm">Scroll to Explore</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Emotional Stats Section */}
+      <section id="stats" className="animate-on-scroll relative py-20 bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div 
+                key={index}
+                className={`text-center transform transition-all duration-1000 ${
+                  isVisible.stats ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ animationDelay: `${index * 200}ms` }}
+              >
+                <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] border-2 border-[#0076FF]/30 rounded-2xl p-8 hover:border-[#0076FF] hover:scale-105 transition-all duration-300 group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0076FF] to-[#0056CC] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+                  <div className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] p-4 rounded-2xl w-fit mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                    <stat.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="text-5xl font-black bg-gradient-to-r from-[#0076FF] to-[#00C6FF] bg-clip-text text-transparent mb-2">
+                    {stat.number}<span className="text-3xl">{stat.suffix}</span>
+                  </div>
+                  <div className="text-gray-300 font-bold text-lg uppercase tracking-wide">
+                    {stat.label}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Emotional Features Section */}
+      <section id="features" className="animate-on-scroll relative py-20 bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
+              Why <span className="shimmer-text">Forexism</span> Changes Lives?
+            </h2>
+            <p className="text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              We don't just teach trading - we provide a complete system for financial freedom tailored for Pakistanis
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div 
+                key={index}
+                className={`group relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border-2 border-[#0076FF]/30 rounded-2xl p-8 hover:border-[#0076FF] transition-all duration-500 hover:scale-105 transform ${
+                  isVisible.features ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ animationDelay: feature.delay }}
+              >
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-2xl opacity-0 group-hover:opacity-20 blur transition-all duration-500"></div>
+                <div className="relative z-10">
+                  <div className={`bg-gradient-to-r ${feature.color} p-4 rounded-2xl w-fit mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
+                    <feature.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#0076FF] group-hover:to-[#00C6FF] group-hover:bg-clip-text transition-all duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed text-lg">
+                    {feature.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Meet Our Mentor Section */}
+      <section id="mentor" className="animate-on-scroll relative py-20 bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
+              Learn From <span className="shimmer-text">The Master Trader</span>
+            </h2>
+            <p className="text-2xl text-gray-400 max-w-2xl mx-auto">
+              Get personally mentored by Atif Wali - The man who revolutionized trading education in Pakistan
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Mentor Image */}
+            <div className="relative group">
+              <div className="absolute -inset-4 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-3xl opacity-20 blur-xl group-hover:opacity-30 transition-all duration-500"></div>
+              <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] rounded-2xl p-2 border border-[#0076FF]/30 overflow-hidden">
+                <div className="relative overflow-hidden rounded-xl">
+                  <img
+                    src="/Images/Atif.png"
+                    alt="Atif Wali - Head Trading Mentor"
+                    className="w-full h-auto transform group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => {
+                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect width="400" height="400" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3EMentor Image%3C/text%3E%3C/svg%3E';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                
+                {/* Floating Badges */}
+                <div className="absolute top-4 left-4 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-float">
+                  Founder
+                </div>
+                <div className="absolute bottom-4 right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-float" style={{animationDelay: '1s'}}>
+                  7+ Years
+                </div>
+              </div>
+            </div>
+
+            {/* Mentor Info */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-4xl font-black text-white mb-2 bg-gradient-to-r from-[#0076FF] to-[#00C6FF] bg-clip-text text-transparent">Atif Wali</h3>
+                <div className="flex items-center space-x-4 mb-4">
+                  <span className="px-4 py-2 bg-[#0076FF] text-white rounded-full text-sm font-bold animate-pulse-glow">
+                    Head Trading Mentor
+                  </span>
+                  <span className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold">
+                    7+ Years Experience
+                  </span>
+                </div>
+                <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+                  As the founder and lead mentor at Forexism, Atif Wali has dedicated his career to empowering Pakistani traders with professional trading education. With over 7 years of hands-on experience in forex markets, he has developed a unique structured approach that combines technical analysis with practical market psychology.
+                </p>
+              </div>
+
+              {/* Specialty */}
+              <div>
+                <h4 className="text-xl font-bold text-white mb-4">Areas of Expertise</h4>
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  {[
+                    { icon: Target, text: "Market Structure", color: "from-[#0076FF] to-[#0056CC]" },
+                    { icon: TrendingUp, text: "Price Action", color: "from-purple-500 to-pink-500" },
+                    { icon: Brain, text: "Trading Psychology", color: "from-green-500 to-emerald-500" },
+                    { icon: Shield, text: "Risk Management", color: "from-yellow-500 to-amber-500" }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center space-x-2 p-3 bg-white/5 rounded-lg border border-white/10 group hover:border-[#0076FF] transition-all duration-300">
+                      <div className={`bg-gradient-to-r ${item.color} p-2 rounded-lg group-hover:scale-110 transition-transform`}>
+                        <item.icon className="h-4 w-4 text-white" />
+                      </div>
+                      <span className="text-white text-sm font-medium">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Achievements */}
+              <div>
+                <h4 className="text-xl font-bold text-white mb-4">Notable Achievements</h4>
+                <div className="space-y-3">
+                  {[
+                    { icon: Award, text: "Mentored 2,847+ successful traders across Pakistan", color: "text-yellow-400" },
+                    { icon: Users, text: "Helped 500+ students pass prop firm challenges", color: "text-green-400" },
+                    { icon: Star, text: "Maintained 4.9/5 rating with 94% student success rate", color: "text-blue-400" }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg border border-white/10 group hover:border-[#0076FF] transition-all duration-300">
+                      <item.icon className={`h-5 w-5 ${item.color} group-hover:scale-110 transition-transform`} />
+                      <span className="text-gray-300">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Teaching Philosophy */}
+              <div className="p-4 bg-[#0076FF]/10 rounded-lg border border-[#0076FF]/20 group hover:bg-[#0076FF]/20 transition-all duration-300">
+                <h4 className="text-lg font-bold text-[#0076FF] mb-2">Teaching Philosophy</h4>
+                <p className="text-gray-300 text-sm italic">
+                  "I believe every Pakistani has the potential to achieve financial freedom through trading. My mission is to provide clear, practical education that works in real market conditions, not just in theory."
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Emotional Success Stories */}
+      <section id="reviews" className="animate-on-scroll relative py-20 bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
+              Real <span className="shimmer-text">Success Stories</span>
+            </h2>
+            <p className="text-2xl text-gray-400">
+              From ordinary Pakistanis to extraordinary traders
+            </p>
+          </div>
+
+          <div className={`relative transition-all duration-1000 ${
+            isVisible.reviews ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+          }`}>
+            <div className="absolute -inset-4 bg-gradient-to-r from-[#0076FF] via-[#0056CC] to-[#0076FF] rounded-3xl opacity-20 blur-2xl animate-pulse"></div>
+            <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-xl border-2 border-[#0076FF]/50 rounded-3xl p-8 lg:p-12 shadow-2xl">
+              <div className="flex flex-col lg:flex-row items-center gap-8">
+                {/* Avatar & Profit */}
+                <div className="relative flex-shrink-0">
+                  <div className="absolute -inset-4 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full opacity-30 blur-xl"></div>
+                  <div className={`relative w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-gradient-to-br ${pakistaniReviews[currentReviewIndex].color} flex items-center justify-center text-white text-3xl lg:text-4xl font-black shadow-2xl border-4 border-white/20 group hover:scale-110 transition-transform duration-300`}>
+                    {pakistaniReviews[currentReviewIndex].initial}
+                  </div>
+                  {/* Profit Badge */}
+                  <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-pulse-glow">
+                    {pakistaniReviews[currentReviewIndex].profit}
+                  </div>
+                  {/* Profession Badge */}
+                  <div className="absolute -top-4 -left-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-xl font-bold text-xs">
+                    {pakistaniReviews[currentReviewIndex].profession}
+                  </div>
+                </div>
+                
+                {/* Review Content */}
+                <div className="flex-1 text-center lg:text-left">
+                  {/* Rating */}
+                  <div className="flex justify-center lg:justify-start items-center mb-6">
+                    <div className="flex items-center text-yellow-400 space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star 
+                          key={i} 
+                          className={`h-6 w-6 ${i < Math.floor(pakistaniReviews[currentReviewIndex].rating) ? 'fill-yellow-400 animate-pulse' : ''}`}
+                          style={{animationDelay: `${i * 0.1}s`}}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-2xl text-white ml-3 font-black">{pakistaniReviews[currentReviewIndex].rating}/5</span>
+                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-gray-100 text-xl lg:text-2xl italic mb-6 leading-relaxed font-medium">
+                    "{pakistaniReviews[currentReviewIndex].review}"
+                  </p>
+
+                  {/* Reviewer Info */}
+                  <div className="border-t border-[#0076FF]/30 pt-6">
+                    <div className="font-black text-white text-2xl lg:text-3xl mb-2">{pakistaniReviews[currentReviewIndex].name}</div>
+                    <div className="text-blue-300 text-lg flex items-center justify-center lg:justify-start">
+                      <span>{pakistaniReviews[currentReviewIndex].location}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Navigation Dots */}
+              <div className="flex justify-center mt-8 space-x-3">
+                {pakistaniReviews.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentReviewIndex(index)}
+                    className={`transition-all rounded-full ${
+                      index === currentReviewIndex 
+                        ? 'w-10 h-3 bg-[#0076FF] shadow-lg animate-pulse' 
+                        : 'w-3 h-3 bg-gray-600 hover:bg-gray-500'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Transparency & Trust Section */}
+      <section id="certificates" className="animate-on-scroll relative py-20 bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <div className="inline-block px-4 py-2 bg-[#0076FF]/30 backdrop-blur-sm border border-[#0076FF]/30 rounded-full text-blue-200 text-xs font-semibold mb-4 tracking-wide uppercase">
+              Verified Credentials & Certifications
+            </div>
+            <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
+              <span className="shimmer-text">Transparency & Trust</span>
+            </h2>
+            <p className="text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              Explore our comprehensive credentials and certifications that demonstrate our expertise and success in trading education.
+            </p>
+          </div>
+
+          {/* Credentials Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {displayedCertificates.map((certificate, index) => (
+              <div 
+                key={certificate.id}
+                className={`group relative cursor-pointer transform transition-all duration-1000 ${
+                  isVisible.certificates ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => handleCertificateClick(certificate)}
+              >
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0076FF] via-[#0056CC] to-[#0076FF] rounded-2xl opacity-30 group-hover:opacity-50 blur transition-all duration-500"></div>
+                
+                <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] border-2 border-[#0076FF]/30 rounded-2xl overflow-hidden shadow-2xl transform hover:-translate-y-2 hover:shadow-[#0076FF]/20 transition-all duration-500 h-full flex flex-col">
+                  {/* Certificate Image */}
+                  <div className="aspect-[4/3] overflow-hidden flex-shrink-0 relative">
+                    <img 
+                      src={certificate.image} 
+                      alt={certificate.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3ECertificate%3C/text%3E%3C/svg%3E';
+                      }}
+                    />
+                    
+                    {/* Certificate Type Badge */}
+                    <div className="absolute top-4 right-4">
+                      <span className="px-3 py-1.5 bg-[#0076FF] text-white text-xs font-black rounded-full shadow-lg backdrop-blur-sm border border-white/20">
+                        {certificate.type}
+                      </span>
+                    </div>
+
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="text-center p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <Award className="h-12 w-12 text-[#0076FF] mx-auto mb-3 animate-pulse" />
+                        <div className="text-white font-black text-lg mb-2">Click to View Full Size</div>
+                        <div className="text-blue-300 text-sm">{certificate.type}</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Certificate Info */}
+                  <div className="p-6 flex-grow flex flex-col">
+                    <h3 className="text-white font-black text-xl mb-3 line-clamp-2 flex-grow group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#0076FF] group-hover:to-[#00C6FF] group-hover:bg-clip-text transition-all duration-300">
+                      {certificate.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm mb-6 line-clamp-2">
+                      {certificate.description}
+                    </p>
+                    
+                    {/* Action Button */}
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCertificateClick(certificate);
+                      }}
+                      className="w-full bg-gradient-to-r from-[#0076FF] to-[#0056CC] hover:from-[#0056CC] hover:to-[#0076FF] text-white py-3 px-4 rounded-xl font-black text-sm transition-all transform group-hover:scale-105 shadow-lg group-hover:shadow-[#0076FF]/25 flex items-center justify-center space-x-2 relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                      <ExternalLink className="h-4 w-4 relative z-10" />
+                      <span className="relative z-10">View Certificate</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Show More/Less Button */}
+          <div className="text-center mt-8">
+            <button
+              onClick={() => setShowAllCertificates(!showAllCertificates)}
+              className="px-8 py-4 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-2xl hover:from-[#0056CC] hover:to-[#0076FF] transition-all font-black text-lg shadow-2xl hover:shadow-[#0076FF]/50 transform hover:scale-105 flex items-center space-x-2 mx-auto relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-1000"></div>
+              {showAllCertificates ? (
+                <>
+                  <ChevronUp className="h-5 w-5 relative z-10" />
+                  <span className="relative z-10">Show Less Certificates</span>
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-5 w-5 relative z-10" />
+                  <span className="relative z-10">View All {allCertificates.length} Certificates</span>
+                </>
+              )}
+            </button>
+            <p className="text-gray-400 mt-4 text-lg">
+              {showAllCertificates 
+                ? `Showing all ${allCertificates.length} certificates`
+                : `Showing ${displayedCertificates.length} of ${allCertificates.length} certificates`
+              }
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Certificate Full View Modal */}
       {selectedCertificate && (
         <div 
@@ -326,29 +1324,201 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
         </div>
       )}
 
-      {/* Hero Section - UPDATED with #0076FF color scheme matching CoursesPage */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#1a2332] via-[#1e2b3d] to-[#1a2332] py-16 lg:py-20">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-[#0076FF] rounded-full filter blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#0076FF] rounded-full filter blur-3xl animate-pulse delay-700"></div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div className="space-y-6 text-white">
-              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-[#0076FF]/30 rounded-full text-sm font-medium backdrop-blur-sm border border-[#0076FF]/30">
-                <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                <span>Welcome to Forexism</span>
+      {/* Emotional Learning Path */}
+      <section id="pricing" className="animate-on-scroll relative py-20 bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] rounded-3xl p-8 md:p-12 border-2 border-[#0076FF]/30 shadow-2xl relative overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#0076FF] rounded-full filter blur-3xl animate-float"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#0056CC] rounded-full filter blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+            </div>
+
+            <div className="relative z-10">
+              <div className="text-center mb-12">
+                <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
+                  Your Path to <span className="shimmer-text">Financial Freedom</span>
+                </h2>
+                <p className="text-2xl text-gray-400 max-w-2xl mx-auto">
+                  Choose your journey. We'll handle the rest.
+                </p>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                Master the Art of Trading,<br />
-                <span className="text-[#0076FF] bg-transparent">Unlock Your Trading Potential</span><br />
-                with Expert Guidance!
-              </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-blue-100 leading-relaxed">
-                <strong className="font-semibold">Trade Smarter, Grow Faster:</strong> Join Our Community for Growth, Guidance, and Celebration!
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                {/* Free Courses */}
+                <div className={`group relative transform transition-all duration-1000 ${
+                  isVisible.pricing ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                }`}>
+                  <div className="absolute -inset-0.5 bg-gradient-to-br from-green-400 to-green-600 rounded-3xl opacity-30 group-hover:opacity-50 blur transition-all duration-500"></div>
+                  <div className="relative bg-gradient-to-br from-[#0a1628] to-[#0f1f3a] rounded-2xl p-8 border border-green-500/30 group-hover:border-green-500 transition-all duration-500 h-full flex flex-col">
+                    <div className="text-center mb-6">
+                      <div className="bg-green-500/20 p-4 rounded-2xl w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
+                        <Video className="h-12 w-12 text-green-400" />
+                      </div>
+                      <h3 className="text-2xl font-black text-white mb-2">Start Your Journey</h3>
+                      <div className="text-green-400 text-3xl font-black animate-pulse">FREE</div>
+                      <div className="text-gray-400 text-sm">Perfect for beginners</div>
+                    </div>
+                    
+                    <ul className="space-y-4 mb-8 flex-grow">
+                      {[
+                        "Basic Market Structure",
+                        "Risk Management Foundation",
+                        "Trading Psychology Intro",
+                        "Community Access",
+                        "Live Q&A Sessions",
+                        "Beginner-friendly Content"
+                      ].map((item, idx) => (
+                        <li key={idx} className="flex items-center space-x-3 group/item">
+                          <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0 group-hover/item:scale-110 transition-transform" />
+                          <span className="text-gray-300 group-hover/item:text-white transition-colors">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <button
+                      onClick={handleFreeMasterclassClick}
+                      className="w-full bg-green-500 hover:bg-green-600 text-white py-4 px-6 rounded-xl font-black text-lg transition-all transform group-hover:scale-105 shadow-2xl group-hover:shadow-green-500/25 relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                      <span className="relative z-10">Start Learning Free</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Premium Courses - Featured */}
+                <div className={`group relative scale-105 z-20 transform transition-all duration-1000 ${
+                  isVisible.pricing ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                }`} style={{animationDelay: '200ms'}}>
+                  <div className="absolute -inset-0.5 bg-gradient-to-br from-[#0076FF] to-[#0056CC] rounded-3xl opacity-40 group-hover:opacity-60 blur transition-all duration-500"></div>
+                  <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] rounded-2xl p-8 border-2 border-[#0076FF] group-hover:border-[#0076FF] transition-all duration-500 h-full flex flex-col">
+                    {/* Popular Badge */}
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                      <div className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white px-6 py-2 rounded-full font-black text-sm shadow-2xl animate-pulse-glow">
+                        MOST POPULAR
+                      </div>
+                    </div>
+
+                    <div className="text-center mb-6">
+                      <div className="bg-[#0076FF]/20 p-4 rounded-2xl w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
+                        <Award className="h-12 w-12 text-[#0076FF]" />
+                      </div>
+                      <h3 className="text-2xl font-black text-white mb-2">Premium Mastery</h3>
+                      <div className="text-[#0076FF] text-4xl font-black animate-pulse">$200</div>
+                      <div className="text-gray-400 text-sm">One-Time Payment • Lifetime Access</div>
+                    </div>
+                    
+                    <ul className="space-y-4 mb-8 flex-grow">
+                      {[
+                        "Everything in Free +",
+                        "Advanced Market Structure",
+                        "Live Trading Sessions",
+                        "Prop Firm Challenges",
+                        "1-on-1 Mentorship",
+                        "Lifetime Course Updates",
+                        "Private Community",
+                        "Advanced Risk Management"
+                      ].map((item, idx) => (
+                        <li key={idx} className="flex items-center space-x-3 group/item">
+                          <CheckCircle className="h-5 w-5 text-[#0076FF] flex-shrink-0 group-hover/item:scale-110 transition-transform" />
+                          <span className="text-gray-300 group-hover/item:text-white transition-colors">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <button
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          setShowAuthModal(true);
+                          setAuthMode('signup');
+                        } else {
+                          setCurrentPage('courses');
+                        }
+                      }}
+                      className="w-full bg-gradient-to-r from-[#0076FF] to-[#0056CC] hover:from-[#0056CC] hover:to-[#0076FF] text-white py-4 px-6 rounded-xl font-black text-lg transition-all transform group-hover:scale-105 shadow-2xl group-hover:shadow-[#0076FF]/25 relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                      <span className="relative z-10">{isAuthenticated ? 'Enroll Now' : 'Start Your Transformation'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 1-on-1 Coaching */}
+                <div className={`group relative transform transition-all duration-1000 ${
+                  isVisible.pricing ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                }`} style={{animationDelay: '400ms'}}>
+                  <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-3xl opacity-30 group-hover:opacity-50 blur transition-all duration-500"></div>
+                  <div className="relative bg-gradient-to-br from-[#0a1628] to-[#0f1f3a] rounded-2xl p-8 border border-purple-500/30 group-hover:border-purple-500 transition-all duration-500 h-full flex flex-col">
+                    <div className="text-center mb-6">
+                      <div className="bg-purple-500/20 p-4 rounded-2xl w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
+                        <Users className="h-12 w-12 text-purple-400" />
+                      </div>
+                      <h3 className="text-2xl font-black text-white mb-2">Elite Coaching</h3>
+                      <div className="text-purple-400 text-3xl font-black animate-pulse">$300</div>
+                      <div className="text-gray-400 text-sm">Per Session • Personalized</div>
+                    </div>
+                    
+                    <ul className="space-y-4 mb-8 flex-grow">
+                      {[
+                        "Personalized 1-on-1 Sessions",
+                        "Custom Trading Plan",
+                        "Portfolio Analysis",
+                        "Advanced Strategy Development",
+                        "Direct Mentor Access",
+                        "Unlimited Q&A Support",
+                        "Performance Tracking",
+                        "Custom Risk Management"
+                      ].map((item, idx) => (
+                        <li key={idx} className="flex items-center space-x-3 group/item">
+                          <CheckCircle className="h-5 w-5 text-purple-400 flex-shrink-0 group-hover/item:scale-110 transition-transform" />
+                          <span className="text-gray-300 group-hover/item:text-white transition-colors">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <button
+                      onClick={() => setCurrentPage('courses')}
+                      className="w-full bg-purple-500 hover:bg-purple-600 text-white py-4 px-6 rounded-xl font-black text-lg transition-all transform group-hover:scale-105 shadow-2xl group-hover:shadow-purple-500/25 relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                      <span className="relative z-10">Book Elite Session</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final Emotional CTA */}
+      <section className="relative py-20 bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] border-2 border-[#0076FF]/50 rounded-3xl p-8 text-center relative overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute inset-0">
+              <div className="absolute top-0 left-0 w-32 h-32 bg-[#0076FF] rounded-full filter blur-3xl opacity-20 animate-float"></div>
+              <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#0056CC] rounded-full filter blur-3xl opacity-20 animate-float" style={{animationDelay: '1s'}}></div>
+            </div>
+
+            <div className="relative z-10">
+              <div className="inline-flex items-center space-x-2 px-6 py-3 bg-[#0076FF]/30 rounded-2xl text-blue-300 text-lg font-black mb-6 border border-[#0076FF]/30 animate-pulse-glow">
+                <Sparkles className="h-6 w-6" />
+                <span>Your Financial Freedom Awaits!</span>
+              </div>
+              
+              <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
+                Ready to Transform Your 
+                <span className="block shimmer-text">
+                  Life Forever?
+                </span>
+              </h2>
+              
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Join <span className="text-yellow-400 font-black animate-pulse">2,847+</span> Pakistani traders who said goodbye to financial stress and hello to freedom.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-2">
+
+              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
                 <button
                   onClick={() => {
                     if (isAuthenticated) {
@@ -358,577 +1528,47 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                       setAuthMode('signup');
                     }
                   }}
-                  className="px-8 py-3.5 bg-white text-[#0076FF] rounded-lg hover:bg-blue-50 transition-all font-bold text-base shadow-2xl hover:scale-105 transform"
+                  className="group px-12 py-5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-2xl hover:from-[#0056CC] hover:to-[#0076FF] transition-all duration-500 font-black text-xl shadow-2xl hover:shadow-[#0076FF]/50 hover:scale-105 transform animate-pulse-glow relative overflow-hidden"
                 >
-                  ENROLL NOW →
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <span className="flex items-center space-x-3 relative z-10">
+                    <Rocket className="h-6 w-6 group-hover:animate-bounce" />
+                    <span>START YOUR JOURNEY NOW</span>
+                    <Heart className="h-6 w-6 text-red-400 group-hover:scale-110 transition-transform" />
+                  </span>
                 </button>
-                <button
-                  onClick={() => setCurrentPage('courses')}
-                  className="px-8 py-3.5 bg-[#0076FF]/30 text-white rounded-lg hover:bg-[#0076FF]/50 transition-all font-medium backdrop-blur-sm border border-white/20"
-                >
-                  View Courses
-                </button>
-              </div>
-            </div>
-
-            {/* Professional Video Frame - RESTORED */}
-            <div className="relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-2xl opacity-20 blur-2xl"></div>
-              
-              <div className="relative bg-black rounded-2xl shadow-2xl overflow-hidden border-2 border-[#0076FF]/30">
-                <div className="relative" style={{ paddingBottom: '56.25%' }}>
-                  <iframe
-                    className="absolute top-0 left-0 w-full h-full"
-                    src="https://www.youtube.com/embed/cmSAr4o3F30?autoplay=1&mute=1&loop=1&playlist=cmSAr4o3F30&controls=1&rel=0&modestbranding=1"
-                    title="Free Trading Class"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-
-                <div className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] px-4 sm:px-6 py-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="flex items-center space-x-2 mb-1">
-                        <div className="flex items-center space-x-1.5 bg-red-600 px-2 py-0.5 rounded-md">
-                          <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                          <span className="text-white text-xs font-bold">LIVE</span>
-                        </div>
-                        <span className="text-blue-100 text-xs font-medium">Now Playing</span>
-                      </div>
-                      <div className="text-white font-bold text-sm sm:text-base">FREE PAID CLASS - TRADING & SETUP</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <div className="bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628] py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-              Unlock Your Trading Potential,<br />
-              <span className="text-[#0076FF]">Learn From Experts</span>
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-400">
-              Learn to Earn with Expert Guidance, Your Path to Financial Freedom!
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-            <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border border-[#0076FF]/50 rounded-xl p-6 hover:transform hover:scale-105 transition-all shadow-xl">
-              <div className="bg-[#0076FF] p-3 rounded-lg w-fit mb-4">
-                <BarChart3 className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">Advanced Methodology</h3>
-              <p className="text-gray-300 leading-relaxed text-sm">
-                A powerful structure-based approach for all markets: stocks, forex, and crypto, helping you identify trends, volume patterns, and profitable opportunities with precision.
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border border-[#0076FF]/50 rounded-xl p-6 hover:transform hover:scale-105 transition-all shadow-xl">
-              <div className="bg-[#0076FF] p-3 rounded-lg w-fit mb-4">
-                <Zap className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">Live Trading Sessions</h3>
-              <p className="text-gray-300 leading-relaxed text-sm">
-                Learn trading by doing! Our courses focus on hands-on practice with practical exercises and real-time market examples for effective learning and instant application.
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border border-[#0076FF]/50 rounded-xl p-6 hover:transform hover:scale-105 transition-all shadow-xl">
-              <div className="bg-[#0076FF] p-3 rounded-lg w-fit mb-4">
-                <Video className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">15+ Hours of Videos</h3>
-              <p className="text-gray-300 leading-relaxed text-sm">
-                Gain essential trade skills through 15+ hours of recorded and live video sessions, combining expert guidance with practical learning opportunities for mastery.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* What You'll Learn Section - Matching CoursesPage Design */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] rounded-2xl p-8 md:p-12 border border-[#0076FF]/30 shadow-2xl">
-          <div className="text-center mb-12">
-            <Target className="w-16 h-16 mx-auto text-[#0076FF] mb-4" />
-            <h2 className="text-4xl font-bold mb-4 text-white">ADVANCED FOREX TRADING COURSE</h2>
-            <p className="text-xl text-gray-300">Take your trading to the next level with professional strategies that institutions use!</p>
-          </div>
-
-          <div className="mb-12">
-            <h3 className="text-2xl font-bold mb-8 text-center text-white flex items-center justify-center space-x-3">
-              <Video className="w-8 h-8 text-[#0076FF]" />
-              <span>What You'll Master:</span>
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* 1. Advanced Market Structure */}
-              <div className="bg-[#0a1628] rounded-xl p-6 border border-gray-700/50 hover:border-[#0076FF]/50 transition-all">
-                <div className="flex items-start space-x-4">
-                  <TrendingUp className="w-8 h-8 text-[#0076FF] flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="text-lg font-bold mb-3 text-white">1. Advanced Market Structure</h4>
-                    <ul className="space-y-2 text-gray-300 text-sm">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>Real CHoCH & BOS Analysis</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>Live market examples and applications</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
               </div>
 
-              {/* 2. Order Blocks & Fair Value Gaps */}
-              <div className="bg-[#0a1628] rounded-xl p-6 border border-gray-700/50 hover:border-[#0076FF]/50 transition-all">
-                <div className="flex items-start space-x-4">
-                  <Target className="w-8 h-8 text-[#0076FF] flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="text-lg font-bold mb-3 text-white">2. Order Blocks & FVGs</h4>
-                    <ul className="space-y-2 text-gray-300 text-sm">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>Spotting high-probability OBs & FVGs</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>Professional trade setups</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Liquidity Analysis */}
-              <div className="bg-[#0a1628] rounded-xl p-6 border border-gray-700/50 hover:border-[#0076FF]/50 transition-all">
-                <div className="flex items-start space-x-4">
-                  <BarChart3 className="w-8 h-8 text-[#0076FF] flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="text-lg font-bold mb-3 text-white">3. Liquidity Analysis</h4>
-                    <ul className="space-y-2 text-gray-300 text-sm">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>Liquidity sweep identification</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>Profitable liquidity trading strategies</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* 4. Trading Psychology */}
-              <div className="bg-[#0a1628] rounded-xl p-6 border border-gray-700/50 hover:border-[#0076FF]/50 transition-all">
-                <div className="flex items-start space-x-4">
-                  <Brain className="w-8 h-8 text-[#0076FF] flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="text-lg font-bold mb-3 text-white">4. Trading Psychology</h4>
-                    <ul className="space-y-2 text-gray-300 text-sm">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>Master patience & discipline</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>Control fear, greed & FOMO</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Why Join Section */}
-          <div className="bg-gradient-to-r from-[#0076FF]/20 to-[#0056CC]/20 rounded-xl p-8 border border-[#0076FF]/30">
-            <h3 className="text-2xl font-bold mb-6 text-center text-white flex items-center justify-center space-x-3">
-              <Star className="w-8 h-8 text-yellow-400" />
-              <span>Why Join Forexism?</span>
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <div>
-                <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-3" />
-                <p className="text-white font-semibold">Go beyond basics – learn institutional-level trading</p>
-              </div>
-              <div>
-                <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-3" />
-                <p className="text-white font-semibold">Real-world examples & practical strategies</p>
-              </div>
-              <div>
-                <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-3" />
-                <p className="text-white font-semibold">Focus on both technical & psychological edge</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Student Reviews */}
-      <div className="bg-[#0a1628] py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 bg-[#0076FF]/30 backdrop-blur-sm border border-[#0076FF]/30 rounded-full text-blue-200 text-xs font-semibold mb-4 tracking-wide uppercase">
-              Student Success Stories
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-              Hear from our <span className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] bg-clip-text text-transparent">Champion Traders</span>
-            </h2>
-            <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
-              Real results from real students who transformed their trading journey with Forexism
-            </p>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12">
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-[#0076FF] rounded-xl opacity-20 group-hover:opacity-30 blur transition-all"></div>
-              <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border border-[#0076FF]/50 rounded-xl p-6 text-center transform hover:-translate-y-1 transition-all">
-                <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-[#0076FF] to-[#0056CC] bg-clip-text text-transparent mb-2">2,300+</div>
-                <div className="text-gray-300 font-medium text-sm">Active Students</div>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-[#0076FF] rounded-xl opacity-20 group-hover:opacity-30 blur transition-all"></div>
-              <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border border-[#0076FF]/50 rounded-xl p-6 text-center transform hover:-translate-y-1 transition-all">
-                <div className="flex items-center justify-center text-4xl lg:text-5xl font-black bg-gradient-to-r from-[#0076FF] to-[#0056CC] bg-clip-text text-transparent mb-2">
-                  4.8
-                  <Star className="h-6 w-6 fill-yellow-400 text-yellow-400 ml-1" />
-                </div>
-                <div className="text-gray-300 font-medium text-sm">Average Rating</div>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-[#0076FF] rounded-xl opacity-20 group-hover:opacity-30 blur transition-all"></div>
-              <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border border-[#0076FF]/50 rounded-xl p-6 text-center transform hover:-translate-y-1 transition-all">
-                <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-[#0076FF] to-[#0056CC] bg-clip-text text-transparent mb-2">95%</div>
-                <div className="text-gray-300 font-medium text-sm">Success Rate</div>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-[#0076FF] rounded-xl opacity-20 group-hover:opacity-30 blur transition-all"></div>
-              <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border border-[#0076FF]/50 rounded-xl p-6 text-center transform hover:-translate-y-1 transition-all">
-                <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-[#0076FF] to-[#0056CC] bg-clip-text text-transparent mb-2">15+</div>
-                <div className="text-gray-300 font-medium text-sm">Hours Content</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Featured Review */}
-          <div className="relative max-w-4xl mx-auto">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#0076FF] via-[#0056CC] to-[#0076FF] rounded-2xl opacity-20 blur-xl"></div>
-            <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-xl border-2 border-[#0076FF]/50 rounded-2xl p-6 lg:p-8 shadow-2xl">
-              <div className="flex flex-col md:flex-row items-center gap-6">
-                {/* Avatar */}
-                <div className="relative flex-shrink-0">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full opacity-50 blur-lg"></div>
-                  <div className={`relative w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br ${pakistaniReviews[currentReviewIndex].color} flex items-center justify-center text-white text-2xl lg:text-3xl font-black shadow-2xl border-4 border-white/30`}>
-                    {pakistaniReviews[currentReviewIndex].initial}
+              {/* Final Trust Elements */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto">
+                <div className="flex items-center space-x-3 bg-white/5 rounded-2xl p-4 border border-white/10 group hover:border-[#0076FF] transition-all duration-300">
+                  <TrendingUpIcon className="h-8 w-8 text-green-400 group-hover:scale-110 transition-transform" />
+                  <div className="text-left">
+                    <div className="text-white font-bold">Proven Results</div>
+                    <div className="text-gray-400 text-sm">94% Success Rate</div>
                   </div>
                 </div>
                 
-                {/* Review Content */}
-                <div className="flex-1 text-center md:text-left">
-                  {/* Rating */}
-                  <div className="flex justify-center md:justify-start items-center mb-4">
-                    <div className="flex items-center text-yellow-400 space-x-1">
-                      {[...Array(Math.floor(pakistaniReviews[currentReviewIndex].rating))].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-yellow-400" />
-                      ))}
-                      {pakistaniReviews[currentReviewIndex].rating % 1 !== 0 && (
-                        <div className="relative">
-                          <Star className="h-4 w-4 text-yellow-400" />
-                          <Star className="h-4 w-4 fill-yellow-400 absolute top-0 left-0" style={{ clipPath: 'inset(0 50% 0 0)' }} />
-                        </div>
-                      )}
-                    </div>
-                    <span className="text-xl text-white ml-2 font-bold">{pakistaniReviews[currentReviewIndex].rating}</span>
-                  </div>
-
-                  {/* Review Text */}
-                  <p className="text-gray-100 text-base lg:text-lg italic mb-4 leading-relaxed">
-                    "{pakistaniReviews[currentReviewIndex].review}"
-                  </p>
-
-                  {/* Reviewer Info */}
-                  <div className="border-t border-[#0076FF]/30 pt-4">
-                    <div className="font-bold text-white text-lg lg:text-xl mb-1">{pakistaniReviews[currentReviewIndex].name}</div>
-                    <div className="text-blue-300 text-sm flex items-center justify-center md:justify-start">
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      {pakistaniReviews[currentReviewIndex].location}
-                    </div>
+                <div className="flex items-center space-x-3 bg-white/5 rounded-2xl p-4 border border-white/10 group hover:border-[#0076FF] transition-all duration-300">
+                  <Clock className="h-8 w-8 text-[#0076FF] group-hover:scale-110 transition-transform" />
+                  <div className="text-left">
+                    <div className="text-white font-bold">Lifetime Access</div>
+                    <div className="text-gray-400 text-sm">Learn at Your Pace</div>
                   </div>
                 </div>
-              </div>
-
-              {/* Navigation Dots */}
-              <div className="flex justify-center mt-6 space-x-2">
-                {pakistaniReviews.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentReviewIndex(index)}
-                    className={`transition-all rounded-full ${
-                      index === currentReviewIndex 
-                        ? 'w-8 h-2 bg-[#0076FF]' 
-                        : 'w-2 h-2 bg-gray-600 hover:bg-gray-500'
-                    }`}
-                    aria-label={`View review ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Learning Path Selection - Matching CoursesPage */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-[#0f1f3a] rounded-2xl p-8 md:p-12 border border-gray-700/50">
-          <h2 className="text-3xl font-bold mb-8 text-center text-white">Choose Your Learning Path</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {/* Free Courses Card */}
-            <div 
-              onClick={() => setCurrentPage('courses')}
-              className="bg-[#0a1628] rounded-xl p-6 text-center border border-gray-700/50 hover:border-green-500/50 hover:bg-[#0a1628]/80 transition-all cursor-pointer transform hover:scale-105 hover:shadow-xl hover:shadow-green-500/20 group"
-            >
-              <Video className="w-12 h-12 text-green-500 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-bold mb-2 text-white">Free Courses</h3>
-              <p className="text-gray-400 text-sm mb-4">Start with foundational trading concepts. No payment needed!</p>
-              <div className="mt-4 text-green-500 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                Click to view courses
-              </div>
-            </div>
-            
-            {/* Premium Courses Card */}
-            <div 
-              onClick={() => setCurrentPage('courses')}
-              className="bg-[#0a1628] rounded-xl p-6 text-center border border-gray-700/50 hover:border-[#0076FF]/50 hover:bg-[#0a1628]/80 transition-all cursor-pointer transform hover:scale-105 hover:shadow-xl hover:shadow-[#0076FF]/20 group"
-            >
-              <Award className="w-12 h-12 text-[#0076FF] mx-auto mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-bold mb-2 text-white">Premium Courses</h3>
-              <p className="text-gray-400 text-sm mb-2">Pay once for ALL premium courses - current & future videos included!</p>
-              <p className="text-[#0076FF] font-bold text-lg mb-4">$200 One-Time</p>
-              <div className="mt-4 text-[#0076FF] text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                Click to view courses
-              </div>
-            </div>
-            
-            {/* 1-on-1 Coaching Card */}
-            <div 
-              onClick={() => setCurrentPage('courses')}
-              className="bg-[#0a1628] rounded-xl p-6 text-center border border-gray-700/50 hover:border-purple-500/50 hover:bg-[#0a1628]/80 transition-all cursor-pointer transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20 group"
-            >
-              <Users className="w-12 h-12 text-purple-500 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-bold mb-2 text-white">1-on-1 Coaching</h3>
-              <p className="text-gray-400 text-sm mb-2">Personalized mentorship with expert traders for accelerated growth</p>
-              <p className="text-purple-500 font-bold text-lg mb-4">$300/Session</p>
-              <div className="mt-4 text-purple-500 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                Click to view sessions
-              </div>
-            </div>
-          </div>
-
-          {/* Call to Action */}
-          <div className="text-center">
-            <button
-              onClick={() => {
-                if (!isAuthenticated) {
-                  setShowAuthModal(true);
-                  setAuthMode('signup');
-                } else {
-                  setCurrentPage('courses');
-                }
-              }}
-              className="px-10 py-4 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-xl hover:from-[#0056CC] hover:to-[#0076FF] transition-all font-bold text-lg shadow-2xl hover:shadow-[#0076FF]/50 hover:scale-105 transform"
-            >
-              {isAuthenticated ? 'Browse All Courses' : 'Start Learning Now!'}
-            </button>
-            <p className="text-gray-400 text-sm mt-4">
-              {!isAuthenticated && 'Sign up to access all courses and track your progress'}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Transparency & Trust Section */}
-      <div className="bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628] py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 bg-[#0076FF]/30 backdrop-blur-sm border border-[#0076FF]/30 rounded-full text-blue-200 text-xs font-semibold mb-4 tracking-wide uppercase">
-              Verified Credentials & Certifications
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-              <span className="text-[#0076FF]">Transparency & Trust</span>
-            </h2>
-            <p className="text-base sm:text-lg text-gray-300 max-w-3xl mx-auto">
-              Explore our comprehensive credentials and certifications that demonstrate our expertise and success in trading education.
-            </p>
-          </div>
-
-          {/* Credentials Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {displayedCertificates.map((certificate) => (
-              <div 
-                key={certificate.id}
-                className="relative group cursor-pointer"
-                onClick={() => handleCertificateClick(certificate)}
-              >
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0076FF] via-[#0056CC] to-[#0076FF] rounded-xl opacity-30 group-hover:opacity-50 blur transition-all duration-500"></div>
                 
-                <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] border border-[#0076FF]/30 rounded-xl overflow-hidden shadow-2xl transform hover:-translate-y-2 hover:shadow-[#0076FF]/20 transition-all duration-500 h-full flex flex-col">
-                  {/* Certificate Image */}
-                  <div className="aspect-[4/3] overflow-hidden flex-shrink-0 relative">
-                    <img 
-                      src={certificate.image} 
-                      alt={certificate.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3ECertificate%3C/text%3E%3C/svg%3E';
-                      }}
-                    />
-                    
-                    {/* Certificate Type Badge */}
-                    <div className="absolute top-3 right-3">
-                      <span className="px-2.5 py-1 bg-[#0076FF] text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
-                        {certificate.type}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  {/* Certificate Info */}
-                  <div className="p-5 flex-grow flex flex-col">
-                    <h3 className="text-white font-bold text-base lg:text-lg mb-2 line-clamp-2 flex-grow">
-                      {certificate.title}
-                    </h3>
-                    <p className="text-gray-400 text-xs mb-4 line-clamp-2">
-                      {certificate.description}
-                    </p>
-                    
-                    {/* Action Button */}
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCertificateClick(certificate);
-                      }}
-                      className="w-full bg-[#0076FF] hover:bg-[#0056CC] text-white py-2.5 px-4 rounded-lg font-semibold text-sm transition-all flex items-center justify-center space-x-2"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      <span>View Certificate</span>
-                    </button>
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="text-center p-6">
-                      <Award className="h-12 w-12 text-[#0076FF] mx-auto mb-3" />
-                      <div className="text-white font-bold text-lg mb-2">Click to View Full Size</div>
-                      <div className="text-blue-300 text-sm">{certificate.type}</div>
-                    </div>
+                <div className="flex items-center space-x-3 bg-white/5 rounded-2xl p-4 border border-white/10 group hover:border-[#0076FF] transition-all duration-300">
+                  <Users className="h-8 w-8 text-purple-400 group-hover:scale-110 transition-transform" />
+                  <div className="text-left">
+                    <div className="text-white font-bold">Community Support</div>
+                    <div className="text-gray-400 text-sm">Always Here to Help</div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Show More/Less Button */}
-          <div className="text-center mt-8">
-            <button
-              onClick={() => setShowAllCertificates(!showAllCertificates)}
-              className="px-8 py-3 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-lg hover:from-[#0056CC] hover:to-[#0076FF] transition-all font-semibold text-sm shadow-lg hover:shadow-[#0076FF]/50 transform hover:scale-105 flex items-center space-x-2 mx-auto"
-            >
-              {showAllCertificates ? (
-                <>
-                  <ChevronUp className="h-4 w-4" />
-                  <span>Show Less</span>
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="h-4 w-4" />
-                  <span>View All {allCertificates.length} Certificates</span>
-                </>
-              )}
-            </button>
-            <p className="text-gray-400 mt-3 text-sm">
-              {showAllCertificates 
-                ? `Showing all ${allCertificates.length} certificates`
-                : `Showing ${displayedCertificates.length} of ${allCertificates.length} certificates`
-              }
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Professional CTA Section */}
-      <div className="relative bg-[#0a1628] py-16 lg:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0076FF]/20 via-[#0056CC]/10 to-[#0a1628]"></div>
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(0, 118, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(0, 86, 204, 0.1) 0%, transparent 50%)'
-        }}></div>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-xl border border-[#0076FF]/30 rounded-2xl p-8 lg:p-12 shadow-2xl text-center">
-            <div className="inline-block px-4 py-2 bg-[#0076FF]/30 rounded-full text-blue-300 text-xs font-semibold mb-4 border border-[#0076FF]/30">
-              <span className="flex items-center space-x-2">
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <span>Limited Time Offer</span>
-              </span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-              Ready to Start Your <br />
-              <span className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] bg-clip-text text-transparent">Trading Journey?</span>
-            </h2>
-            <p className="text-base sm:text-lg text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of successful traders who have transformed their lives with Forexism. Start learning today with expert guidance and lifetime support.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <button
-                onClick={() => {
-                  if (isAuthenticated) {
-                    setCurrentPage('courses');
-                  } else {
-                    setShowAuthModal(true);
-                    setAuthMode('signup');
-                  }
-                }}
-                className="px-8 py-3.5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-lg hover:from-[#0056CC] hover:to-[#0076FF] transition-all font-bold text-base shadow-2xl hover:shadow-[#0076FF]/50 hover:scale-105 transform"
-              >
-                Get Started Now →
-              </button>
-              <button
-                onClick={() => setCurrentPage('courses')}
-                className="px-8 py-3.5 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all font-medium text-base backdrop-blur-sm border border-white/20 hover:border-white/40"
-              >
-                View All Courses
-              </button>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="h-4 w-4 text-[#0076FF]" />
-                <span>No Credit Card Required</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="h-4 w-4 text-[#0076FF]" />
-                <span>Lifetime Access</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="h-4 w-4 text-[#0076FF]" />
-                <span>24/7 Support</span>
-              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* FAQ Section */}
       <div className="bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628] py-16 lg:py-20" id="faq-section">
