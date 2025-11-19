@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Star, CheckCircle, Video, BarChart3, Zap, ChevronDown, ChevronUp, Award, Shield, FileText, Download, ExternalLink, X, ArrowLeft, Play, Users, Target, Brain, TrendingUp, Rocket, Clock, BookOpen, Mail, Phone, Sparkles, Trophy, Heart, TrendingUp as TrendingUpIcon, Gem, Crown, Coins, Wallet, Globe, Smartphone, Calendar } from 'lucide-react';
+import { Star, CheckCircle, Video, BarChart3, Zap, ChevronDown, ChevronUp, Award, Shield, FileText, Download, ExternalLink, X, ArrowLeft, Play, Users, Target, Brain, TrendingUp, Rocket, Clock, BookOpen, Mail, Phone, Sparkles, Trophy, Heart, TrendingUp as TrendingUpIcon, Gem, Crown, Coins, Wallet, Globe, Smartphone, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMode }) => {
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
@@ -13,13 +13,41 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
   const [isTyping, setIsTyping] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [videoHover, setVideoHover] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [sliderDirection, setSliderDirection] = useState(1);
 
   const lines = [
-    "Master the Art of Trading,",
+    "Learn the things no one ever taught before",
     "Unlock Your Trading Potential",
     "with Expert Guidance!"
   ];
+
+  // Forex images for the slider
+  const forexImages = [
+    "/images/forex1.jpg",
+    "/images/forex2.jpg", 
+    "/images/forex3.jpg",
+    "/images/forex4.jpg"
+  ];
+
+  // Image slider animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSliderDirection(1);
+      setCurrentImageIndex((prev) => (prev + 1) % forexImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const nextImage = () => {
+    setSliderDirection(1);
+    setCurrentImageIndex((prev) => (prev + 1) % forexImages.length);
+  };
+
+  const prevImage = () => {
+    setSliderDirection(-1);
+    setCurrentImageIndex((prev) => (prev - 1 + forexImages.length) % forexImages.length);
+  };
 
   // Enhanced text animation with perfect timing
   useEffect(() => {
@@ -507,21 +535,21 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
           50% { opacity: 0.8; }
           100% { transform: translateY(100vh) rotateX(0deg); opacity: 0; }
         }
-        @keyframes videoGlow {
-          0%, 100% { 
-            box-shadow: 
-              0 0 20px rgba(0, 118, 255, 0.4),
-              0 0 40px rgba(0, 118, 255, 0.2),
-              0 0 60px rgba(0, 118, 255, 0.1),
-              inset 0 0 20px rgba(0, 118, 255, 0.1);
-          }
-          50% { 
-            box-shadow: 
-              0 0 40px rgba(0, 118, 255, 0.8),
-              0 0 80px rgba(0, 118, 255, 0.4),
-              0 0 120px rgba(0, 118, 255, 0.2),
-              inset 0 0 40px rgba(0, 118, 255, 0.2);
-          }
+        @keyframes slideInFromRight {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInFromLeft {
+          from { transform: translateX(-100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutToLeft {
+          from { transform: translateX(0); opacity: 1; }
+          to { transform: translateX(-100%); opacity: 0; }
+        }
+        @keyframes slideOutToRight {
+          from { transform: translateX(0); opacity: 1; }
+          to { transform: translateX(100%); opacity: 0; }
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
         .animate-float-particle { animation: float-particle 15s linear infinite; }
@@ -541,7 +569,6 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
             rgba(0, 118, 255, 0.1) 100%);
           background-size: 400% 400%;
         }
-        .animate-video-glow { animation: videoGlow 3s ease-in-out infinite; }
         .shimmer-text {
           background: linear-gradient(90deg, #0076FF, #00C6FF, #0076FF);
           background-size: 1000px 100%;
@@ -573,7 +600,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
         .parallax-content {
           transform: translate(${mousePosition.x * 0.3}px, ${mousePosition.y * 0.3}px);
         }
-        .video-container {
+        .slider-container {
           position: relative;
           background: linear-gradient(145deg, #0a1628 0%, #0f1f3a 50%, #0a1628 100%);
           border-radius: 24px;
@@ -581,16 +608,15 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
           transform-style: preserve-3d;
           perspective: 1000px;
         }
-        .video-frame {
+        .slider-frame {
           position: relative;
           border: 3px solid;
           border-image: linear-gradient(45deg, #0076FF, #00C6FF, #0076FF) 1;
           border-radius: 20px;
           background: rgba(0, 0, 0, 0.9);
-          transform: ${videoHover ? 'translateZ(20px) rotateX(5deg) rotateY(-5deg)' : 'translateZ(0) rotateX(0) rotateY(0)'};
           transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        .video-glow {
+        .slider-glow {
           position: absolute;
           top: -10px;
           left: -10px;
@@ -601,7 +627,18 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
           filter: blur(20px);
           opacity: 0.3;
           z-index: -1;
-          animation: videoGlow 3s ease-in-out infinite;
+        }
+        .slide-enter-right {
+          animation: slideInFromRight 0.8s ease-out forwards;
+        }
+        .slide-enter-left {
+          animation: slideInFromLeft 0.8s ease-out forwards;
+        }
+        .slide-exit-left {
+          animation: slideOutToLeft 0.8s ease-out forwards;
+        }
+        .slide-exit-right {
+          animation: slideOutToRight 0.8s ease-out forwards;
         }
       `}</style>
 
@@ -775,39 +812,91 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
               </div>
             </div>
 
-            {/* Ultra Pro Video Visual */}
+            {/* Professional Image Slider */}
             <div className="relative animate-bounce-in parallax-content">
-              <div 
-                className="video-container"
-                onMouseEnter={() => setVideoHover(true)}
-                onMouseLeave={() => setVideoHover(false)}
-              >
-                <div className="video-glow"></div>
-                <div className="video-frame animate-video-glow">
+              <div className="slider-container">
+                <div className="slider-glow"></div>
+                <div className="slider-frame">
                   {/* Holographic Effect Overlay */}
                   <div className="absolute inset-0 animate-hologram rounded-[17px] pointer-events-none z-10"></div>
                   
-                  {/* Main Video Content */}
-                  <div className="relative" style={{ paddingBottom: '56.25%' }}>
-                    <iframe
-                      className="absolute top-0 left-0 w-full h-full rounded-[17px]"
-                      src="https://www.youtube.com/embed/cmSAr4o3F30?autoplay=1&mute=1&loop=1&playlist=cmSAr4o3F30&controls=1&rel=0&modestbranding=1"
-                      title="Forexism - Professional Trading Education Platform | Learn Trading from Experts"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                    
-                    {/* Animated Play Button Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/40 rounded-[17px]">
-                      <div className="bg-[#0076FF] p-6 rounded-full animate-pulse-glow transform hover:scale-110 transition-transform">
-                        <Play className="w-12 h-12 text-white" />
+                  {/* Main Slider Content */}
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-[17px]">
+                    {forexImages.map((image, index) => (
+                      <div
+                        key={index}
+                        className={`absolute inset-0 transition-all duration-800 ease-in-out ${
+                          index === currentImageIndex
+                            ? sliderDirection > 0 
+                              ? 'slide-enter-right' 
+                              : 'slide-enter-left'
+                            : index < currentImageIndex
+                            ? 'slide-exit-left'
+                            : 'slide-exit-right'
+                        }`}
+                      >
+                        <img
+                          src={image}
+                          alt={`Forex Trading Education ${index + 1}`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3EForex Trading%3C/text%3E%3C/svg%3E';
+                          }}
+                        />
+                        
+                        {/* Image Overlay with Info */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40 flex items-end">
+                          <div className="p-6 text-white w-full">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="px-3 py-1 bg-[#0076FF] rounded-full text-sm font-bold">
+                                Image {index + 1} of {forexImages.length}
+                              </span>
+                              <span className="px-3 py-1 bg-green-600 rounded-full text-sm font-bold animate-pulse">
+                                LIVE TRADING
+                              </span>
+                            </div>
+                            <h3 className="text-xl font-bold mb-1">Professional Trading Setup</h3>
+                            <p className="text-blue-100 text-sm">Real market analysis & strategies</p>
+                          </div>
+                        </div>
                       </div>
+                    ))}
+                    
+                    {/* Navigation Arrows */}
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white/20 hover:scale-110"
+                    >
+                      <ChevronLeft className="h-6 w-6" />
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white/20 hover:scale-110"
+                    >
+                      <ChevronRight className="h-6 w-6" />
+                    </button>
+
+                    {/* Dots Indicator */}
+                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+                      {forexImages.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            setSliderDirection(index > currentImageIndex ? 1 : -1);
+                            setCurrentImageIndex(index);
+                          }}
+                          className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                            index === currentImageIndex
+                              ? 'bg-[#0076FF] scale-125'
+                              : 'bg-white/50 hover:bg-white/70'
+                          }`}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Video Info Bar with Ultra Pro Design */}
+                {/* Slider Info Bar */}
                 <div className="relative bg-gradient-to-r from-[#0076FF] to-[#0056CC] px-8 py-6 rounded-b-[20px] overflow-hidden">
                   {/* Animated Background Pattern */}
                   <div className="absolute inset-0 opacity-20">
@@ -820,19 +909,19 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                       <div className="flex items-center space-x-4 mb-3">
                         <div className="flex items-center space-x-2 bg-red-600 px-4 py-2 rounded-xl animate-pulse">
                           <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
-                          <span className="text-white font-bold text-sm">FREE MASTERCLASS</span>
+                          <span className="text-white font-bold text-sm">PROFESSIONAL SETUPS</span>
                         </div>
-                        <span className="text-blue-100 text-lg font-medium">For Pakistani Traders</span>
+                        <span className="text-blue-100 text-lg font-medium">Real Trading Examples</span>
                       </div>
                       <div className="text-white font-black text-xl">
-                        Discover Forexism - Your Path to Trading Success
+                        See Our Professional Trading Environment
                       </div>
                       <div className="text-blue-100 text-sm mt-1">
-                        Learn professional trading strategies from industry experts
+                        Advanced tools and strategies for successful trading
                       </div>
                     </div>
                     <div className="bg-white/20 p-3 rounded-xl group-hover:scale-110 transition-transform backdrop-blur-sm">
-                      <Play className="h-8 w-8 text-white" />
+                      <TrendingUp className="h-8 w-8 text-white" />
                     </div>
                   </div>
                 </div>
