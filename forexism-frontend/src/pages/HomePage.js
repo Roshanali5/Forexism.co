@@ -30,12 +30,12 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
     "/images/forex4.jpg"
   ];
 
-  // Image slider animation
+  // Professional image slider animation
   useEffect(() => {
     const interval = setInterval(() => {
       setSliderDirection(1);
       setCurrentImageIndex((prev) => (prev + 1) % forexImages.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -49,7 +49,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
     setCurrentImageIndex((prev) => (prev - 1 + forexImages.length) % forexImages.length);
   };
 
-  // Enhanced text animation with perfect timing
+  // Professional text animation
   useEffect(() => {
     setIsTyping(true);
     setAnimatedText('');
@@ -83,12 +83,12 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
     return () => clearInterval(cursorInterval);
   }, []);
 
-  // Mouse move effect for parallax
+  // Professional mouse move effect
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20
+        x: (e.clientX / window.innerWidth - 0.5) * 10,
+        y: (e.clientY / window.innerHeight - 0.5) * 10
       });
     };
 
@@ -96,7 +96,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Scroll progress and animations
+  // Professional scroll animations
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
@@ -104,39 +104,38 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
       const progress = (scrollTop / docHeight) * 100;
       setScrollProgress(progress);
 
-      // Section animations
       const sections = document.querySelectorAll('.animate-on-scroll');
-      sections.forEach((section, index) => {
+      sections.forEach((section) => {
         const rect = section.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight * 0.8;
+        const isVisible = rect.top < window.innerHeight * 0.85;
         if (isVisible) {
           setIsVisible(prev => ({ ...prev, [section.id]: true }));
         }
       });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Particle effect for hero section
+  // Professional particle effect
   useEffect(() => {
     const createParticle = () => {
       const particle = document.createElement('div');
-      particle.className = 'absolute w-1 h-1 bg-[#0076FF] rounded-full animate-float-particle';
+      particle.className = 'absolute w-1 h-1 bg-gradient-to-r from-[#0076FF] to-[#00C6FF] rounded-full animate-professional-float';
       particle.style.left = Math.random() * 100 + 'vw';
-      particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-      particle.style.animationDelay = Math.random() * 5 + 's';
-      particle.style.opacity = Math.random() * 0.6 + 0.2;
+      particle.style.animationDuration = (Math.random() * 6 + 4) + 's';
+      particle.style.animationDelay = Math.random() * 2 + 's';
+      particle.style.opacity = Math.random() * 0.3 + 0.1;
       document.getElementById('particle-container')?.appendChild(particle);
 
       setTimeout(() => {
         particle.remove();
-      }, 15000);
+      }, 10000);
     };
 
-    const interval = setInterval(createParticle, 300);
+    const interval = setInterval(createParticle, 500);
     return () => clearInterval(interval);
   }, []);
 
@@ -410,7 +409,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentReviewIndex((prev) => (prev + 1) % pakistaniReviews.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -437,10 +436,8 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
     setSelectedCertificate(null);
   };
 
-  // Function to handle free masterclass click
   const handleFreeMasterclassClick = () => {
     setCurrentPage('courses');
-    // This will trigger the free courses view in CoursesPage
     setTimeout(() => {
       const event = new CustomEvent('navigateToFreeCourses');
       window.dispatchEvent(event);
@@ -450,293 +447,233 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
   return (
     <div className="min-h-screen bg-[#0a1628] text-white overflow-x-hidden">
       <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(5deg); }
-        }
-        @keyframes float-particle {
-          0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 0.5; }
-          100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-        @keyframes glow {
+        /* Professional Animation Keyframes */
+        @keyframes professional-float {
           0%, 100% { 
-            box-shadow: 0 0 20px rgba(0, 118, 255, 0.3),
-                       0 0 40px rgba(0, 118, 255, 0.2),
-                       0 0 60px rgba(0, 118, 255, 0.1);
+            transform: translateY(0px) rotate(0deg);
+            opacity: 0.1;
+          }
+          33% { 
+            transform: translateY(-20px) rotate(120deg);
+            opacity: 0.3;
+          }
+          66% { 
+            transform: translateY(-10px) rotate(240deg);
+            opacity: 0.2;
+          }
+        }
+
+        @keyframes professional-glow {
+          0%, 100% { 
+            box-shadow: 0 0 20px rgba(0, 118, 255, 0.1);
           }
           50% { 
-            box-shadow: 0 0 30px rgba(0, 118, 255, 0.6),
-                       0 0 60px rgba(0, 118, 255, 0.4),
-                       0 0 90px rgba(0, 118, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 118, 255, 0.2);
           }
         }
-        @keyframes slideIn {
-          from { 
-            transform: translateX(-100px) scale(0.9); 
-            opacity: 0; 
-          }
-          to { 
-            transform: translateX(0) scale(1); 
-            opacity: 1; 
-          }
-        }
-        @keyframes bounceIn {
-          0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
-          50% { transform: scale(1.05) rotate(5deg); }
-          70% { transform: scale(0.95); }
-          100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-        @keyframes fadeInUp {
+
+        @keyframes professional-slide-up {
           from {
             opacity: 0;
-            transform: translateY(50px) scale(0.95);
+            transform: translateY(40px) scale(0.95);
           }
           to {
             opacity: 1;
             transform: translateY(0) scale(1);
           }
         }
-        @keyframes pulse-glow {
-          0%, 100% { 
-            transform: scale(1);
-            box-shadow: 0 0 20px rgba(0, 118, 255, 0.4);
+
+        @keyframes professional-fade-in {
+          from {
+            opacity: 0;
           }
-          50% { 
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(0, 118, 255, 0.8);
-          }
-        }
-        @keyframes shimmer {
-          0% { background-position: -1000px 0; }
-          100% { background-position: 1000px 0; }
-        }
-        @keyframes star-twinkle {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-        @keyframes hologram {
-          0% { 
-            background-position: 0% 0%;
-            opacity: 0.7;
-          }
-          50% { 
-            background-position: 100% 100%;
+          to {
             opacity: 1;
           }
-          100% { 
-            background-position: 0% 0%;
-            opacity: 0.7;
+        }
+
+        @keyframes professional-scale-in {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
           }
         }
-        @keyframes matrix {
-          0% { transform: translateY(-100px) rotateX(90deg); opacity: 0; }
-          50% { opacity: 0.8; }
-          100% { transform: translateY(100vh) rotateX(0deg); opacity: 0; }
+
+        @keyframes professional-slide-in-right {
+          from {
+            opacity: 0;
+            transform: translateX(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
         }
-        @keyframes slideInFromRight {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
+
+        @keyframes professional-slide-in-left {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
         }
-        @keyframes slideInFromLeft {
-          from { transform: translateX(-100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
+
+        @keyframes professional-shimmer {
+          0% {
+            background-position: -1000px 0;
+          }
+          100% {
+            background-position: 1000px 0;
+          }
         }
-        @keyframes slideOutToLeft {
-          from { transform: translateX(0); opacity: 1; }
-          to { transform: translateX(-100%); opacity: 0; }
+
+        @keyframes professional-pulse-subtle {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.02);
+            opacity: 0.9;
+          }
         }
-        @keyframes slideOutToRight {
-          from { transform: translateX(0); opacity: 1; }
-          to { transform: translateX(100%); opacity: 0; }
+
+        /* Professional Animation Classes */
+        .animate-professional-float {
+          animation: professional-float 6s ease-in-out infinite;
         }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .animate-float-particle { animation: float-particle 15s linear infinite; }
-        .animate-glow { animation: glow 3s ease-in-out infinite; }
-        .animate-slide-in { animation: slideIn 1s ease-out; }
-        .animate-bounce-in { animation: bounceIn 1s ease-out; }
-        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out; }
-        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-        .animate-star-twinkle { animation: star-twinkle 3s ease-in-out infinite; }
-        .animate-hologram { 
-          animation: hologram 4s ease-in-out infinite;
-          background: linear-gradient(45deg, 
-            rgba(0, 118, 255, 0.1) 0%, 
-            rgba(0, 198, 255, 0.2) 25%, 
-            rgba(0, 118, 255, 0.1) 50%, 
-            rgba(0, 198, 255, 0.2) 75%, 
-            rgba(0, 118, 255, 0.1) 100%);
-          background-size: 400% 400%;
+
+        .animate-professional-glow {
+          animation: professional-glow 3s ease-in-out infinite;
         }
-        .shimmer-text {
+
+        .animate-professional-slide-up {
+          animation: professional-slide-up 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .animate-professional-fade-in {
+          animation: professional-fade-in 0.6s ease-out forwards;
+        }
+
+        .animate-professional-scale-in {
+          animation: professional-scale-in 0.5s ease-out forwards;
+        }
+
+        .animate-professional-pulse {
+          animation: professional-pulse-subtle 2s ease-in-out infinite;
+        }
+
+        .professional-shimmer {
           background: linear-gradient(90deg, #0076FF, #00C6FF, #0076FF);
           background-size: 1000px 100%;
-          animation: shimmer 3s infinite linear;
+          animation: professional-shimmer 3s infinite linear;
           background-clip: text;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
-        .matrix-rain {
-          position: absolute;
-          top: 0;
-          left: 0;
+
+        /* Parallax Effects */
+        .parallax-bg {
+          transform: translate(${mousePosition.x * 0.2}px, ${mousePosition.y * 0.2}px);
+          transition: transform 0.1s linear;
+        }
+
+        .parallax-content {
+          transform: translate(${mousePosition.x * 0.1}px, ${mousePosition.y * 0.1}px);
+          transition: transform 0.1s linear;
+        }
+
+        /* Image Slider Fix */
+        .slider-image-container {
+          position: relative;
           width: 100%;
           height: 100%;
-          pointer-events: none;
           overflow: hidden;
         }
-        .matrix-char {
-          position: absolute;
-          color: #00C6FF;
-          font-family: 'Courier New', monospace;
-          font-weight: bold;
-          animation: matrix 3s linear infinite;
-          text-shadow: 0 0 8px #00C6FF;
+
+        .slider-image {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          object-position: center;
         }
-        .parallax-bg {
-          transform: translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px);
+
+        /* Responsive Image Handling */
+        @media (max-width: 768px) {
+          .slider-image {
+            object-fit: cover;
+          }
         }
-        .parallax-content {
-          transform: translate(${mousePosition.x * 0.3}px, ${mousePosition.y * 0.3}px);
-        }
-        .slider-container {
-          position: relative;
-          background: linear-gradient(145deg, #0a1628 0%, #0f1f3a 50%, #0a1628 100%);
-          border-radius: 24px;
-          overflow: hidden;
-          transform-style: preserve-3d;
-          perspective: 1000px;
-        }
-        .slider-frame {
-          position: relative;
-          border: 3px solid;
-          border-image: linear-gradient(45deg, #0076FF, #00C6FF, #0076FF) 1;
-          border-radius: 20px;
-          background: rgba(0, 0, 0, 0.9);
-          transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        .slider-glow {
-          position: absolute;
-          top: -10px;
-          left: -10px;
-          right: -10px;
-          bottom: -10px;
-          background: linear-gradient(45deg, #0076FF, #00C6FF, #0076FF);
-          border-radius: 24px;
-          filter: blur(20px);
-          opacity: 0.3;
-          z-index: -1;
-        }
+
+        /* Slide Transitions */
         .slide-enter-right {
-          animation: slideInFromRight 0.8s ease-out forwards;
+          animation: professional-slide-in-right 0.6s ease-out forwards;
         }
+
         .slide-enter-left {
-          animation: slideInFromLeft 0.8s ease-out forwards;
-        }
-        .slide-exit-left {
-          animation: slideOutToLeft 0.8s ease-out forwards;
-        }
-        .slide-exit-right {
-          animation: slideOutToRight 0.8s ease-out forwards;
+          animation: professional-slide-in-left 0.6s ease-out forwards;
         }
       `}</style>
 
       {/* Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gray-700 z-50">
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50">
         <div 
-          className="h-full bg-gradient-to-r from-[#0076FF] to-[#00C6FF] transition-all duration-300"
+          className="h-full bg-gradient-to-r from-[#0076FF] to-[#00C6FF] transition-all duration-300 ease-out"
           style={{ width: `${scrollProgress}%` }}
         ></div>
       </div>
 
-      {/* Supreme Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628] pt-24">
-        {/* Animated Stars Background */}
+      {/* Professional Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0a1628] via-[#0f1f3a] to-[#0a1628] pt-20">
+        {/* Professional Background Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(80)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full animate-star-twinkle"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${2 + Math.random() * 3}s`
-              }}
-            ></div>
-          ))}
-        </div>
-        
-        {/* Matrix Rain Effect */}
-        <div className="matrix-rain">
-          {[...Array(30)].map((_, i) => (
-            <div
-              key={i}
-              className="matrix-char"
-              style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 2}s`,
-                fontSize: `${14 + Math.random() * 10}px`
-              }}
-            >
-              {Math.random() > 0.5 ? '0' : '1'}
-            </div>
-          ))}
-        </div>
-        
-        {/* Particle Container */}
-        <div id="particle-container" className="absolute inset-0 pointer-events-none"></div>
-        
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div 
-            className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full filter blur-[100px] opacity-20 animate-float parallax-bg"
-            style={{ transform: `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px)` }}
-          ></div>
-          <div 
-            className="absolute bottom-20 right-10 w-72 h-72 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full filter blur-[100px] opacity-20 animate-float parallax-bg"
-            style={{ animationDelay: '2s', transform: `translate(${mousePosition.x * 0.3}px, ${mousePosition.y * 0.3}px)` }}
-          ></div>
-          <div 
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full filter blur-[120px] opacity-10 animate-pulse parallax-bg"
-            style={{ transform: `translate(${mousePosition.x * 0.2}px, ${mousePosition.y * 0.2}px)` }}
-          ></div>
+          {/* Subtle Gradient Orbs */}
+          <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-professional-float parallax-bg"></div>
+          <div className="absolute bottom-20 right-10 w-64 h-64 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-professional-float parallax-bg" style={{animationDelay: '2s'}}></div>
+          
+          {/* Professional Particle Container */}
+          <div id="particle-container" className="absolute inset-0 pointer-events-none"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             
             {/* Hero Content */}
-            <div className="space-y-8 animate-slide-in parallax-content">
-              {/* Premium Badge - Fixed positioning with proper margin */}
-              <div className="inline-flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full backdrop-blur-sm border border-[#0076FF]/30 animate-glow mb-8 transform hover:scale-105 transition-transform duration-300">
-                <Trophy className="h-5 w-5 text-yellow-400 animate-pulse" />
-                <span className="text-white font-bold text-sm uppercase tracking-wider">#1 Trading Platform in Pakistan</span>
+            <div className="space-y-8 animate-professional-slide-up parallax-content">
+              {/* Professional Badge */}
+              <div className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#0076FF]/20 to-[#0056CC]/20 backdrop-blur-sm border border-[#0076FF]/30 rounded-full text-blue-200 text-sm font-semibold mb-4 animate-professional-glow">
+                <Trophy className="h-5 w-5 text-yellow-400" />
+                <span>#1 Trading Platform in Pakistan</span>
               </div>
 
-              {/* Enhanced Animated Main Heading */}
+              {/* Professional Animated Heading */}
               <div className="space-y-6">
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight">
                   <span className="block text-white min-h-[84px] flex items-center">
                     {animatedText}
-                    <span className={`inline-block w-2 h-16 bg-[#0076FF] ml-2 ${showCursor && isTyping ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 animate-pulse`}></span>
+                    <span className={`inline-block w-2 h-16 bg-gradient-to-b from-[#0076FF] to-[#00C6FF] ml-2 ${showCursor && isTyping ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}></span>
                   </span>
-                  <span className="block shimmer-text mt-4 text-4xl sm:text-5xl">
+                  <span className="block professional-shimmer mt-4 text-4xl sm:text-5xl">
                     Start Your Journey Today!
                   </span>
                 </h1>
               </div>
 
-              {/* Emotional Subheading */}
-              <p className="text-2xl sm:text-3xl text-blue-100 leading-relaxed font-medium animate-fade-in-up">
-                Join <span className="text-yellow-400 font-bold animate-pulse">2,847+</span> Pakistani Traders Who Found 
+              {/* Professional Subheading */}
+              <p className="text-2xl sm:text-3xl text-blue-100 leading-relaxed font-medium">
+                Join <span className="text-yellow-400 font-bold">2,847+</span> Pakistani Traders Who Found 
                 <span className="text-green-400 font-bold"> Financial Freedom </span>
                 Through Our Proven System!
               </p>
 
-              {/* Emotional Benefits */}
+              {/* Professional Benefits Grid */}
               <div className="grid grid-cols-2 gap-6 py-6">
                 {[
                   { text: "Quit Your 9-5 Job", icon: "💼", color: "from-red-500 to-pink-500" },
@@ -746,10 +683,10 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                 ].map((item, index) => (
                   <div 
                     key={index} 
-                    className="flex items-center space-x-3 group transform hover:scale-105 transition-all duration-300"
+                    className="flex items-center space-x-3 group transform hover:scale-105 transition-all duration-300 animate-professional-fade-in"
                     style={{ animationDelay: `${index * 200}ms` }}
                   >
-                    <div className={`w-12 h-12 bg-gradient-to-r ${item.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                    <div className={`w-12 h-12 bg-gradient-to-r ${item.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg animate-professional-pulse`}>
                       <span className="text-xl">{item.icon}</span>
                     </div>
                     <span className="text-white font-bold text-lg">{item.text}</span>
@@ -757,15 +694,15 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                 ))}
               </div>
 
-              {/* CTA Buttons */}
+              {/* Professional CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-6 pt-8">
                 <button
                   onClick={() => setCurrentPage('courses')}
-                  className="group px-12 py-5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-2xl hover:from-[#0056CC] hover:to-[#0076FF] transition-all duration-500 font-black text-xl shadow-2xl hover:shadow-[#0076FF]/50 hover:scale-105 transform animate-pulse-glow relative overflow-hidden"
+                  className="group px-12 py-5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-2xl hover:from-[#0056CC] hover:to-[#0076FF] transition-all duration-500 font-black text-xl shadow-2xl hover:shadow-[#0076FF]/50 hover:scale-105 transform animate-professional-glow relative overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                   <span className="flex items-center space-x-3 relative z-10">
-                    <Rocket className="h-6 w-6 group-hover:animate-bounce" />
+                    <Rocket className="h-6 w-6 group-hover:animate-professional-float" />
                     <span>START YOUR JOURNEY →</span>
                   </span>
                 </button>
@@ -774,7 +711,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                   onClick={handleFreeMasterclassClick}
                   className="px-12 py-5 bg-white/10 text-white rounded-2xl hover:bg-white/20 transition-all duration-500 font-bold text-xl backdrop-blur-sm border-2 border-white/20 hover:border-white/40 group relative overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0076FF]/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0076FF]/10 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                   <span className="flex items-center space-x-3 relative z-10">
                     <Play className="h-6 w-6 group-hover:scale-110 transition-transform" />
                     <span>Watch Free Masterclass</span>
@@ -782,7 +719,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                 </button>
               </div>
 
-              {/* Trust Indicators */}
+              {/* Professional Trust Indicators */}
               <div className="flex items-center justify-between pt-8">
                 <div className="flex items-center space-x-6">
                   <div className="flex items-center space-x-3">
@@ -790,7 +727,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                       {[1,2,3,4].map((i) => (
                         <div 
                           key={i} 
-                          className="w-10 h-10 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full border-2 border-[#0a1628] animate-bounce shadow-lg"
+                          className="w-10 h-10 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-full border-2 border-[#0a1628] shadow-lg animate-professional-float"
                           style={{animationDelay: `${i * 0.2}s`}}
                         ></div>
                       ))}
@@ -803,7 +740,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                   <div className="flex items-center space-x-2">
                     <div className="flex items-center text-yellow-400">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-5 w-5 fill-yellow-400 animate-pulse" style={{animationDelay: `${i * 0.1}s`}} />
+                        <Star key={i} className="h-5 w-5 fill-yellow-400" />
                       ))}
                     </div>
                     <div className="text-blue-300 text-sm">4.9/5 Rating</div>
@@ -813,136 +750,114 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
             </div>
 
             {/* Professional Image Slider */}
-            <div className="relative animate-bounce-in parallax-content">
-              <div className="slider-container">
-                <div className="slider-glow"></div>
-                <div className="slider-frame">
-                  {/* Holographic Effect Overlay */}
-                  <div className="absolute inset-0 animate-hologram rounded-[17px] pointer-events-none z-10"></div>
-                  
-                  {/* Main Slider Content */}
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-[17px]">
-                    {forexImages.map((image, index) => (
-                      <div
-                        key={index}
-                        className={`absolute inset-0 transition-all duration-800 ease-in-out ${
-                          index === currentImageIndex
-                            ? sliderDirection > 0 
-                              ? 'slide-enter-right' 
-                              : 'slide-enter-left'
-                            : index < currentImageIndex
-                            ? 'slide-exit-left'
-                            : 'slide-exit-right'
-                        }`}
-                      >
+            <div className="relative animate-professional-scale-in parallax-content">
+              <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] border-2 border-[#0076FF]/30 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="relative aspect-[4/3] overflow-hidden bg-gray-900">
+                  {forexImages.map((image, index) => (
+                    <div
+                      key={index}
+                      className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                        index === currentImageIndex
+                          ? sliderDirection > 0 
+                            ? 'slide-enter-right' 
+                            : 'slide-enter-left'
+                          : 'opacity-0'
+                      }`}
+                    >
+                      <div className="slider-image-container">
                         <img
                           src={image}
                           alt={`Forex Trading Education ${index + 1}`}
-                          className="w-full h-full object-cover"
+                          className="slider-image"
                           onError={(e) => {
                             e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3EForex Trading%3C/text%3E%3C/svg%3E';
                           }}
                         />
-                        
-                        {/* Image Overlay with Info */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40 flex items-end">
-                          <div className="p-6 text-white w-full">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="px-3 py-1 bg-[#0076FF] rounded-full text-sm font-bold">
-                                Image {index + 1} of {forexImages.length}
-                              </span>
-                              <span className="px-3 py-1 bg-green-600 rounded-full text-sm font-bold animate-pulse">
-                                LIVE TRADING
-                              </span>
-                            </div>
-                            <h3 className="text-xl font-bold mb-1">Professional Trading Setup</h3>
-                            <p className="text-blue-100 text-sm">Real market analysis & strategies</p>
+                      </div>
+                      
+                      {/* Professional Image Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40 flex items-end">
+                        <div className="p-6 text-white w-full">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="px-3 py-1 bg-[#0076FF] rounded-full text-sm font-bold">
+                              Image {index + 1} of {forexImages.length}
+                            </span>
+                            <span className="px-3 py-1 bg-green-600 rounded-full text-sm font-bold animate-professional-pulse">
+                              LIVE TRADING
+                            </span>
                           </div>
+                          <h3 className="text-xl font-bold mb-1">Professional Trading Setup</h3>
+                          <p className="text-blue-100 text-sm">Real market analysis & strategies</p>
                         </div>
                       </div>
-                    ))}
-                    
-                    {/* Navigation Arrows */}
-                    <button
-                      onClick={prevImage}
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white/20 hover:scale-110"
-                    >
-                      <ChevronLeft className="h-6 w-6" />
-                    </button>
-                    <button
-                      onClick={nextImage}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white/20 hover:scale-110"
-                    >
-                      <ChevronRight className="h-6 w-6" />
-                    </button>
-
-                    {/* Dots Indicator */}
-                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
-                      {forexImages.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => {
-                            setSliderDirection(index > currentImageIndex ? 1 : -1);
-                            setCurrentImageIndex(index);
-                          }}
-                          className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                            index === currentImageIndex
-                              ? 'bg-[#0076FF] scale-125'
-                              : 'bg-white/50 hover:bg-white/70'
-                          }`}
-                        />
-                      ))}
                     </div>
+                  ))}
+                  
+                  {/* Professional Navigation Arrows */}
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white/20 hover:scale-110"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white/20 hover:scale-110"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+
+                  {/* Professional Dots Indicator */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+                    {forexImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          setSliderDirection(index > currentImageIndex ? 1 : -1);
+                          setCurrentImageIndex(index);
+                        }}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          index === currentImageIndex
+                            ? 'bg-[#0076FF] scale-125 shadow-lg'
+                            : 'bg-white/50 hover:bg-white/70'
+                        }`}
+                      />
+                    ))}
                   </div>
                 </div>
 
-                {/* Slider Info Bar */}
-                <div className="relative bg-gradient-to-r from-[#0076FF] to-[#0056CC] px-8 py-6 rounded-b-[20px] overflow-hidden">
-                  {/* Animated Background Pattern */}
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute top-0 left-0 w-20 h-20 bg-white/30 rounded-full filter blur-xl animate-float"></div>
-                    <div className="absolute bottom-0 right-0 w-20 h-20 bg-white/30 rounded-full filter blur-xl animate-float" style={{animationDelay: '1s'}}></div>
-                  </div>
-                  
-                  <div className="relative z-10 flex items-center justify-between">
+                {/* Professional Slider Info */}
+                <div className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] px-8 py-6">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <div className="flex items-center space-x-4 mb-3">
-                        <div className="flex items-center space-x-2 bg-red-600 px-4 py-2 rounded-xl animate-pulse">
-                          <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
-                          <span className="text-white font-bold text-sm">PROFESSIONAL SETUPS</span>
-                        </div>
-                        <span className="text-blue-100 text-lg font-medium">Real Trading Examples</span>
+                      <div className="text-white font-black text-xl mb-2">
+                        Professional Trading Environment
                       </div>
-                      <div className="text-white font-black text-xl">
-                        See Our Professional Trading Environment
-                      </div>
-                      <div className="text-blue-100 text-sm mt-1">
+                      <div className="text-blue-100 text-sm">
                         Advanced tools and strategies for successful trading
                       </div>
                     </div>
-                    <div className="bg-white/20 p-3 rounded-xl group-hover:scale-110 transition-transform backdrop-blur-sm">
-                      <TrendingUp className="h-8 w-8 text-white" />
-                    </div>
+                    <TrendingUp className="h-8 w-8 text-white" />
                   </div>
                 </div>
               </div>
 
-              {/* Floating Success Elements */}
-              <div className="absolute -top-6 -right-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-2xl font-black text-lg transform rotate-12 shadow-2xl animate-float group hover:scale-110 transition-transform cursor-pointer border-2 border-white/20">
+              {/* Professional Floating Elements */}
+              <div className="absolute -top-6 -right-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-2xl font-black text-lg transform rotate-12 shadow-2xl animate-professional-float group hover:scale-110 transition-transform cursor-pointer border-2 border-white/20">
                 Success Stories
               </div>
-              <div className="absolute -bottom-6 -left-6 bg-gradient-to-r from-yellow-500 to-amber-500 text-[#0a1628] px-6 py-3 rounded-2xl font-black text-lg transform -rotate-12 shadow-2xl animate-float group hover:scale-110 transition-transform cursor-pointer border-2 border-white/20" style={{animationDelay: '1s'}}>
+              <div className="absolute -bottom-6 -left-6 bg-gradient-to-r from-yellow-500 to-amber-500 text-[#0a1628] px-6 py-3 rounded-2xl font-black text-lg transform -rotate-12 shadow-2xl animate-professional-float group hover:scale-110 transition-transform cursor-pointer border-2 border-white/20" style={{animationDelay: '1s'}}>
                 94% Success Rate
               </div>
             </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="text-center">
-            <div className="w-6 h-10 border-4 border-[#0076FF] rounded-full flex justify-center mb-2">
-              <div className="w-2 h-3 bg-[#0076FF] rounded-full mt-2 animate-pulse"></div>
+        {/* Professional Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="text-center animate-professional-float">
+            <div className="w-6 h-10 border-2 border-[#0076FF] rounded-full flex justify-center mb-2">
+              <div className="w-1 h-3 bg-[#0076FF] rounded-full mt-2 animate-professional-pulse"></div>
             </div>
             <div className="text-[#0076FF] font-bold text-sm">Scroll to Explore</div>
           </div>
@@ -957,13 +872,13 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
               <div 
                 key={index}
                 className={`text-center transform transition-all duration-1000 ${
-                  isVisible.stats ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                  isVisible.stats ? 'animate-professional-slide-up' : 'opacity-0 translate-y-10'
                 }`}
                 style={{ animationDelay: `${index * 200}ms` }}
               >
                 <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] border-2 border-[#0076FF]/30 rounded-2xl p-8 hover:border-[#0076FF] hover:scale-105 transition-all duration-300 group relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-[#0076FF] to-[#0056CC] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
-                  <div className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] p-4 rounded-2xl w-fit mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg">
+                  <div className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] p-4 rounded-2xl w-fit mx-auto mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg animate-professional-glow">
                     <stat.icon className="h-8 w-8 text-white" />
                   </div>
                   <div className="text-5xl font-black bg-gradient-to-r from-[#0076FF] to-[#00C6FF] bg-clip-text text-transparent mb-2">
@@ -984,7 +899,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
-              Why <span className="shimmer-text">Forexism</span> Changes Lives?
+              Why <span className="professional-shimmer">Forexism</span> Changes Lives?
             </h2>
             <p className="text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
               We don't just teach trading - we provide a complete system for financial freedom tailored for Pakistanis
@@ -996,13 +911,13 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
               <div 
                 key={index}
                 className={`group relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-sm border-2 border-[#0076FF]/30 rounded-2xl p-8 hover:border-[#0076FF] transition-all duration-500 hover:scale-105 transform ${
-                  isVisible.features ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                  isVisible.features ? 'animate-professional-slide-up' : 'opacity-0 translate-y-10'
                 }`}
                 style={{ animationDelay: feature.delay }}
               >
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] rounded-2xl opacity-0 group-hover:opacity-20 blur transition-all duration-500"></div>
                 <div className="relative z-10">
-                  <div className={`bg-gradient-to-r ${feature.color} p-4 rounded-2xl w-fit mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
+                  <div className={`bg-gradient-to-r ${feature.color} p-4 rounded-2xl w-fit mb-6 group-hover:scale-110 transition-transform duration-500 shadow-lg animate-professional-pulse`}>
                     <feature.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-black text-white mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#0076FF] group-hover:to-[#00C6FF] group-hover:bg-clip-text transition-all duration-300">
@@ -1023,7 +938,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
-              Learn From <span className="shimmer-text">The Master Trader</span>
+              Learn From <span className="professional-shimmer">The Master Trader</span>
             </h2>
             <p className="text-2xl text-gray-400 max-w-2xl mx-auto">
               Get personally mentored by Atif Wali - The man who revolutionized trading education in Pakistan
@@ -1048,10 +963,10 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                 </div>
                 
                 {/* Floating Badges */}
-                <div className="absolute top-4 left-4 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-float">
+                <div className="absolute top-4 left-4 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-professional-float">
                   Founder
                 </div>
-                <div className="absolute bottom-4 right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-float" style={{animationDelay: '1s'}}>
+                <div className="absolute bottom-4 right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-professional-float" style={{animationDelay: '1s'}}>
                   7+ Years
                 </div>
               </div>
@@ -1062,7 +977,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
               <div>
                 <h3 className="text-4xl font-black text-white mb-2 bg-gradient-to-r from-[#0076FF] to-[#00C6FF] bg-clip-text text-transparent">Atif Wali</h3>
                 <div className="flex items-center space-x-4 mb-4">
-                  <span className="px-4 py-2 bg-[#0076FF] text-white rounded-full text-sm font-bold animate-pulse-glow">
+                  <span className="px-4 py-2 bg-[#0076FF] text-white rounded-full text-sm font-bold animate-professional-pulse">
                     Head Trading Mentor
                   </span>
                   <span className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold">
@@ -1128,7 +1043,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
-              Real <span className="shimmer-text">Success Stories</span>
+              Real <span className="professional-shimmer">Success Stories</span>
             </h2>
             <p className="text-2xl text-gray-400">
               From ordinary Pakistanis to extraordinary traders
@@ -1136,9 +1051,9 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
           </div>
 
           <div className={`relative transition-all duration-1000 ${
-            isVisible.reviews ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+            isVisible.reviews ? 'animate-professional-slide-up' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="absolute -inset-4 bg-gradient-to-r from-[#0076FF] via-[#0056CC] to-[#0076FF] rounded-3xl opacity-20 blur-2xl animate-pulse"></div>
+            <div className="absolute -inset-4 bg-gradient-to-r from-[#0076FF] via-[#0056CC] to-[#0076FF] rounded-3xl opacity-20 blur-2xl animate-professional-pulse"></div>
             <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] backdrop-blur-xl border-2 border-[#0076FF]/50 rounded-3xl p-8 lg:p-12 shadow-2xl">
               <div className="flex flex-col lg:flex-row items-center gap-8">
                 {/* Avatar & Profit */}
@@ -1148,7 +1063,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                     {pakistaniReviews[currentReviewIndex].initial}
                   </div>
                   {/* Profit Badge */}
-                  <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-pulse-glow">
+                  <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-black text-sm shadow-2xl animate-professional-pulse">
                     {pakistaniReviews[currentReviewIndex].profit}
                   </div>
                   {/* Profession Badge */}
@@ -1165,7 +1080,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
-                          className={`h-6 w-6 ${i < Math.floor(pakistaniReviews[currentReviewIndex].rating) ? 'fill-yellow-400 animate-pulse' : ''}`}
+                          className={`h-6 w-6 ${i < Math.floor(pakistaniReviews[currentReviewIndex].rating) ? 'fill-yellow-400 animate-professional-pulse' : ''}`}
                           style={{animationDelay: `${i * 0.1}s`}}
                         />
                       ))}
@@ -1196,7 +1111,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                     onClick={() => setCurrentReviewIndex(index)}
                     className={`transition-all rounded-full ${
                       index === currentReviewIndex 
-                        ? 'w-10 h-3 bg-[#0076FF] shadow-lg animate-pulse' 
+                        ? 'w-10 h-3 bg-[#0076FF] shadow-lg animate-professional-pulse' 
                         : 'w-3 h-3 bg-gray-600 hover:bg-gray-500'
                     }`}
                   />
@@ -1216,7 +1131,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
               Verified Credentials & Certifications
             </div>
             <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
-              <span className="shimmer-text">Transparency & Trust</span>
+              <span className="professional-shimmer">Transparency & Trust</span>
             </h2>
             <p className="text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
               Explore our comprehensive credentials and certifications that demonstrate our expertise and success in trading education.
@@ -1229,7 +1144,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
               <div 
                 key={certificate.id}
                 className={`group relative cursor-pointer transform transition-all duration-1000 ${
-                  isVisible.certificates ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                  isVisible.certificates ? 'animate-professional-slide-up' : 'opacity-0 translate-y-10'
                 }`}
                 style={{ animationDelay: `${index * 100}ms` }}
                 onClick={() => handleCertificateClick(certificate)}
@@ -1258,7 +1173,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <div className="text-center p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                        <Award className="h-12 w-12 text-[#0076FF] mx-auto mb-3 animate-pulse" />
+                        <Award className="h-12 w-12 text-[#0076FF] mx-auto mb-3 animate-professional-pulse" />
                         <div className="text-white font-black text-lg mb-2">Click to View Full Size</div>
                         <div className="text-blue-300 text-sm">{certificate.type}</div>
                       </div>
@@ -1419,14 +1334,14 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
           <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] rounded-3xl p-8 md:p-12 border-2 border-[#0076FF]/30 shadow-2xl relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-[#0076FF] rounded-full filter blur-3xl animate-float"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#0056CC] rounded-full filter blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#0076FF] rounded-full filter blur-3xl animate-professional-float"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#0056CC] rounded-full filter blur-3xl animate-professional-float" style={{animationDelay: '2s'}}></div>
             </div>
 
             <div className="relative z-10">
               <div className="text-center mb-12">
                 <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">
-                  Your Path to <span className="shimmer-text">Financial Freedom</span>
+                  Your Path to <span className="professional-shimmer">Financial Freedom</span>
                 </h2>
                 <p className="text-2xl text-gray-400 max-w-2xl mx-auto">
                   Choose your journey. We'll handle the rest.
@@ -1436,7 +1351,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                 {/* Free Courses */}
                 <div className={`group relative transform transition-all duration-1000 ${
-                  isVisible.pricing ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                  isVisible.pricing ? 'animate-professional-slide-up' : 'opacity-0 translate-y-10'
                 }`}>
                   <div className="absolute -inset-0.5 bg-gradient-to-br from-green-400 to-green-600 rounded-3xl opacity-30 group-hover:opacity-50 blur transition-all duration-500"></div>
                   <div className="relative bg-gradient-to-br from-[#0a1628] to-[#0f1f3a] rounded-2xl p-8 border border-green-500/30 group-hover:border-green-500 transition-all duration-500 h-full flex flex-col">
@@ -1445,7 +1360,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                         <Video className="h-12 w-12 text-green-400" />
                       </div>
                       <h3 className="text-2xl font-black text-white mb-2">Start Your Journey</h3>
-                      <div className="text-green-400 text-3xl font-black animate-pulse">FREE</div>
+                      <div className="text-green-400 text-3xl font-black animate-professional-pulse">FREE</div>
                       <div className="text-gray-400 text-sm">Perfect for beginners</div>
                     </div>
                     
@@ -1477,13 +1392,13 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
 
                 {/* Premium Courses - Featured */}
                 <div className={`group relative scale-105 z-20 transform transition-all duration-1000 ${
-                  isVisible.pricing ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                  isVisible.pricing ? 'animate-professional-slide-up' : 'opacity-0 translate-y-10'
                 }`} style={{animationDelay: '200ms'}}>
                   <div className="absolute -inset-0.5 bg-gradient-to-br from-[#0076FF] to-[#0056CC] rounded-3xl opacity-40 group-hover:opacity-60 blur transition-all duration-500"></div>
                   <div className="relative bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] rounded-2xl p-8 border-2 border-[#0076FF] group-hover:border-[#0076FF] transition-all duration-500 h-full flex flex-col">
                     {/* Popular Badge */}
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <div className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white px-6 py-2 rounded-full font-black text-sm shadow-2xl animate-pulse-glow">
+                      <div className="bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white px-6 py-2 rounded-full font-black text-sm shadow-2xl animate-professional-pulse">
                         MOST POPULAR
                       </div>
                     </div>
@@ -1493,7 +1408,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                         <Award className="h-12 w-12 text-[#0076FF]" />
                       </div>
                       <h3 className="text-2xl font-black text-white mb-2">Premium Mastery</h3>
-                      <div className="text-[#0076FF] text-4xl font-black animate-pulse">$200</div>
+                      <div className="text-[#0076FF] text-4xl font-black animate-professional-pulse">$200</div>
                       <div className="text-gray-400 text-sm">One-Time Payment • Lifetime Access</div>
                     </div>
                     
@@ -1534,7 +1449,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
 
                 {/* 1-on-1 Coaching */}
                 <div className={`group relative transform transition-all duration-1000 ${
-                  isVisible.pricing ? 'animate-fade-in-up' : 'opacity-0 translate-y-10'
+                  isVisible.pricing ? 'animate-professional-slide-up' : 'opacity-0 translate-y-10'
                 }`} style={{animationDelay: '400ms'}}>
                   <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-3xl opacity-30 group-hover:opacity-50 blur transition-all duration-500"></div>
                   <div className="relative bg-gradient-to-br from-[#0a1628] to-[#0f1f3a] rounded-2xl p-8 border border-purple-500/30 group-hover:border-purple-500 transition-all duration-500 h-full flex flex-col">
@@ -1543,7 +1458,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                         <Users className="h-12 w-12 text-purple-400" />
                       </div>
                       <h3 className="text-2xl font-black text-white mb-2">Elite Coaching</h3>
-                      <div className="text-purple-400 text-3xl font-black animate-pulse">$300</div>
+                      <div className="text-purple-400 text-3xl font-black animate-professional-pulse">$300</div>
                       <div className="text-gray-400 text-sm">Per Session • Personalized</div>
                     </div>
                     
@@ -1586,25 +1501,25 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
           <div className="bg-gradient-to-br from-[#0f1f3a] to-[#0a1628] border-2 border-[#0076FF]/50 rounded-3xl p-8 text-center relative overflow-hidden">
             {/* Background Elements */}
             <div className="absolute inset-0">
-              <div className="absolute top-0 left-0 w-32 h-32 bg-[#0076FF] rounded-full filter blur-3xl opacity-20 animate-float"></div>
-              <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#0056CC] rounded-full filter blur-3xl opacity-20 animate-float" style={{animationDelay: '1s'}}></div>
+              <div className="absolute top-0 left-0 w-32 h-32 bg-[#0076FF] rounded-full filter blur-3xl opacity-20 animate-professional-float"></div>
+              <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#0056CC] rounded-full filter blur-3xl opacity-20 animate-professional-float" style={{animationDelay: '1s'}}></div>
             </div>
 
             <div className="relative z-10">
-              <div className="inline-flex items-center space-x-2 px-6 py-3 bg-[#0076FF]/30 rounded-2xl text-blue-300 text-lg font-black mb-6 border border-[#0076FF]/30 animate-pulse-glow">
+              <div className="inline-flex items-center space-x-2 px-6 py-3 bg-[#0076FF]/30 rounded-2xl text-blue-300 text-lg font-black mb-6 border border-[#0076FF]/30 animate-professional-pulse">
                 <Sparkles className="h-6 w-6" />
                 <span>Your Financial Freedom Awaits!</span>
               </div>
               
               <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
                 Ready to Transform Your 
-                <span className="block shimmer-text">
+                <span className="block professional-shimmer">
                   Life Forever?
                 </span>
               </h2>
               
               <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Join <span className="text-yellow-400 font-black animate-pulse">2,847+</span> Pakistani traders who said goodbye to financial stress and hello to freedom.
+                Join <span className="text-yellow-400 font-black animate-professional-pulse">2,847+</span> Pakistani traders who said goodbye to financial stress and hello to freedom.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
@@ -1617,11 +1532,11 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                       setAuthMode('signup');
                     }
                   }}
-                  className="group px-12 py-5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-2xl hover:from-[#0056CC] hover:to-[#0076FF] transition-all duration-500 font-black text-xl shadow-2xl hover:shadow-[#0076FF]/50 hover:scale-105 transform animate-pulse-glow relative overflow-hidden"
+                  className="group px-12 py-5 bg-gradient-to-r from-[#0076FF] to-[#0056CC] text-white rounded-2xl hover:from-[#0056CC] hover:to-[#0076FF] transition-all duration-500 font-black text-xl shadow-2xl hover:shadow-[#0076FF]/50 hover:scale-105 transform animate-professional-glow relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                   <span className="flex items-center space-x-3 relative z-10">
-                    <Rocket className="h-6 w-6 group-hover:animate-bounce" />
+                    <Rocket className="h-6 w-6 group-hover:animate-professional-float" />
                     <span>START YOUR JOURNEY NOW</span>
                     <Heart className="h-6 w-6 text-red-400 group-hover:scale-110 transition-transform" />
                   </span>
