@@ -18,10 +18,10 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
     "Learn the things no one ever taught before"
   ];
 
-  // Forex images for the slider
+  // Forex images array with direct paths
   const forexImages = [
     "/images/forex1.jpg",
-    "/images/forex2.jpg", 
+    "/images/forex2.jpg",
     "/images/forex3.jpg",
     "/images/forex4.jpg"
   ];
@@ -538,6 +538,11 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
       window.dispatchEvent(event);
     }, 100);
   };
+
+  // Set document title
+  useEffect(() => {
+    document.title = "Forexism - Professional Trading Education";
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0a1628] text-white overflow-x-hidden">
@@ -1149,7 +1154,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                           alt={`Forex Trading Education ${index + 1}`}
                           className="slider-image"
                           onError={(e) => {
-                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3EForex Trading%3C/text%3E%3C/svg%3E';
+                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%231e293b"/%3E%3Ctext x="200" y="150" text-anchor="middle" dominant-baseline="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3EForex Trading Image %3C/text%3E%3C/svg%3E';
                           }}
                         />
                       </div>
@@ -1358,7 +1363,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                     alt="Atif Wali - Head Trading Mentor"
                     className="w-full h-auto transform group-hover:scale-110 transition-transform duration-500"
                     onError={(e) => {
-                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect width="400" height="400" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3EMentor Image%3C/text%3E%3C/svg%3E';
+                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect width="400" height="400" fill="%231e293b"/%3E%3Ctext x="200" y="200" text-anchor="middle" dominant-baseline="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3EMentor Image%3C/text%3E%3C/svg%3E';
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -1560,7 +1565,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                       alt={certificate.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
-                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3ECertificate%3C/text%3E%3C/svg%3E';
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect width="400" height="300" fill="%231e293b"/%3E%3Ctext x="200" y="150" text-anchor="middle" dominant-baseline="middle" fill="%2394a3b8" font-family="Arial" font-size="16"%3ECertificate%3C/text%3E%3C/svg%3E';
                       }}
                     />
                     
@@ -1675,7 +1680,7 @@ const HomePage = ({ setCurrentPage, isAuthenticated, setShowAuthModal, setAuthMo
                       alt={selectedCertificate.title}
                       className="w-full h-auto max-h-[70vh] object-contain"
                       onError={(e) => {
-                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="600"%3E%3Crect width="800" height="600" fill="%231e293b"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%2394a3b8" font-family="Arial" font-size="24"%3ECertificate Image%3C/text%3E%3C/svg%3E';
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"%3E%3Crect width="800" height="600" fill="%231e293b"/%3E%3Ctext x="400" y="300" text-anchor="middle" dominant-baseline="middle" fill="%2394a3b8" font-family="Arial" font-size="24"%3ECertificate Image%3C/text%3E%3C/svg%3E';
                       }}
                     />
                   </div>
