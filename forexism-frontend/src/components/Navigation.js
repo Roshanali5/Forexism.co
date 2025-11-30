@@ -94,8 +94,8 @@ const Navigation = ({
       </div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo Section - Removed blue background and text */}
+        <div className="flex justify-between items-center h-20"> {/* Increased height to accommodate larger logo */}
+          {/* Logo Section - Increased size by 50% */}
           <div 
             className="flex items-center cursor-pointer group flex-shrink-0"
             onClick={() => setCurrentPage('home')}
@@ -103,7 +103,7 @@ const Navigation = ({
             <img 
               src="/Images/forexism-icon.ico" 
               alt="Forexism Logo" 
-              className="h-14 w-28 object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xl"
+              className="h-16 w-32 object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xl"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230076FF'/%3E%3Ctext x='50' y='60' font-size='40' fill='white' text-anchor='middle' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E";
